@@ -1,0 +1,2 @@
+# ICT720_Project_AIOT4
+TAIST-Project_AIOT4
