@@ -1,0 +1,18 @@
+##Check git version ##
+git version
+
+## Initial Config ###
+git config --global user.name "xxx"
+git config --global user.email xxxxx.@xxx
+
+##Start git that folder you want##
+git init
+
+## Remote Git##
+git remote add origin https://github.com/Watthanail/ICT720_Project_AIOT4.git
+
+## Follow step ###
+git add .
+git commit -m 'First commit updated Topic'
+git push -u https://Watthanail:{accesstoken}@github.com/Watthanail/ICT720_Project_AIOT4.git master
+
