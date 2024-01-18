@@ -31,7 +31,7 @@ minimizing downtime and potential revenue loss during crucial periods. <br><br>
     
 <li>A website that can control various devices in the room.</li>
 
-<li>Dashboard that can monitor data of each room.</li>
+<li>Dashboard for operator that can monitor data of each room, checking status of decives within a room.</li>
 </ul>
 
 ### 👩🏻‍💻 Our Members
