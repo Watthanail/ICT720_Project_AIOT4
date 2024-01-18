@@ -15,16 +15,13 @@ minimizing downtime and potential revenue loss during crucial periods. </p>
 
 #### Acceptance Criteria
 
-
-
 <ul>
 <li>Facial recognition of room owner for secure room access.</li>
     
-
 <li>A website that can control various devices in the room.</li>
 </ul>
 
 ### 👩🏻‍💻 Our Members
-1.
-2.Kiattisak Phetmeesri 6614552635 <br>
-3.Thanaphum Withiso 6614552597 <br>
+1. Wathanai Luealamai 6614552627 <br>
+2. Kiattisak Phetmeesri 6614552635 <br>
+3. Thanaphum Withiso 6614552597 <br>
