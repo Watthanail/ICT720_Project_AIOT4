@@ -8,7 +8,7 @@
 #### User stories
 <p align= "left">This study focuses on advancing the customer experience within hotel rooms through the integration of smart devices. The initial phase involves implementing facial recognition technology for secure room access, followed by enabling guests to control and monitor various devices through their personal deviceson the hotels' web browser for check-in processes.Another critical aspect is ensuring the efficiency of electrical equipment in each room, with a system in place to halt operations immediately in the event of abnormalities
 . Furthermore, the data from device is used to proactively evaluate and address maintenance needs, 
-minimizing downtime and potential revenue loss during crucial periods. <br>
+minimizing downtime and potential revenue loss during crucial periods. <br><br>
  1.As a traveler,I want to make sure that the hotel I lived are seacure.<br>
  2.As a hotel owner,We want to serve the best experience for the customer.To make sure they will come back again.<br>
 </p>
