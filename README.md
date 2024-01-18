@@ -30,6 +30,8 @@ minimizing downtime and potential revenue loss during crucial periods. <br><br>
 <li>Facial recognition of room owner for secure room access.</li>
     
 <li>A website that can control various devices in the room.</li>
+
+<li>Dashboard that can monitor data of each room.</li>
 </ul>
 
 ### 👩🏻‍💻 Our Members
