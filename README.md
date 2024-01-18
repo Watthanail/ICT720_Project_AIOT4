@@ -11,6 +11,9 @@
 minimizing downtime and potential revenue loss during crucial periods. <br><br>
  1.As a traveler,I want to make sure that the hotel I lived are secure.<br>
  2.As a hotel owner,We want to serve the best experience for the customer.To make sure they will come back again.<br>
+  <ul>
+   one
+  </ul>
 </p>
 <p align="center">
  <img  width=300px height=300px src="https://raw.githubusercontent.com/Watthanail/ICT720_Project_AIOT4/master/Images/README/OverviewDraft01_160124.png"><br></p>
