@@ -6,8 +6,8 @@
 2. Hotel owner
 
 #### User stories
- 1.As a supervisor or a HR, I want to know behavior of a worker in working hours, so that I can evaluate the worker's work efficiency.<br>
- 2.As a owner of a company, I want to increase , so that I can increase company profit.<br>
+ 1. As a supervisor or a HR, I want to know behavior of a worker in working hours, so that I can evaluate the worker's work efficiency.<br>
+ 2. As a owner of a company, I want to increase production time, quantity and quality of a product, so that I can increase company profit.<br>
 </p>
 <p align="center">
  <img  width=300px height=300px src="https://raw.githubusercontent.com/Watthanail/ICT720_Project_AIOT4/master/Images/README/OverviewDraft01_160124.png"><br></p>
