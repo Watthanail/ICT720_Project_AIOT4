@@ -16,9 +16,9 @@
 
 #### Acceptance Criteria
 <ul>
-<li>System can detect using of phone in manufacturing line by a worker, and face recognition </li>
+<li>System can detect using of phone in manufacturing line in working hours by a worker, and record the inappropriate behavior of that particular worker by using face recognition </li>
 
-<li>Behavior Weekly Reports</li>
+<li>System can report a behavior weekly report of workers. </li>
 </ul>
 
 
