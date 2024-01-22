@@ -6,27 +6,23 @@
 2. Human Resources (HR)
 3. Owner Company
 
-
 #### User stories
-<p align= "left">This study focuses on advancing the customer experience within hotel rooms through the integration of smart devices. The initial phase involves implementing facial recognition technology for secure room access, followed by enabling guests to control and monitor various devices through their personal deviceson the hotels' web browser for check-in processes.Another critical aspect is ensuring the efficiency of electrical equipment in each room, with a system in place to halt operations immediately in the event of abnormalities
-Furthermore, Data from device usage to proactively evaluate and address maintenance needs, 
-minimizing downtime and potential revenue loss during crucial periods. </p>
+ 1. As a supervisor or a HR, I want to know behavior of a worker in working hours, so that I can evaluate the worker's work efficiency.<br>
+ 2. As a owner of a company, I want to increase production time, quantity and quality of a product, so that I can increase company profit.<br>
+</p>
 <p align="center">
  <img  width=300px height=300px src="https://raw.githubusercontent.com/Watthanail/ICT720_Project_AIOT4/master/Images/README/OverviewDraft01_160124.png"><br></p>
 
 
 #### Acceptance Criteria
-
-
-
 <ul>
-<li>Face Recognition and phone detection in manufacturing Line</li>
-    
+<li>System can detect using of phone in manufacturing line by a worker, and face recognition </li>
 
 <li>Behavior Weekly Reports</li>
 </ul>
 
+
 ### 👩🏻‍💻 Our Members
-1. Thanaphum Withiso 6614552597
-2. Wathanai Luealamai 6614552627
-3. Kiattisak Phetmeesri 6614552635
+1. Wathanai Luealamai 6614552627 <br>
+2. Kiattisak Phetmeesri 6614552635 <br>
+3. Thanaphum Withiso 6614552597 <br>
