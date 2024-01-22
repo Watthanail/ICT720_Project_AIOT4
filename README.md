@@ -11,7 +11,7 @@
  2. As a owner of a company, I want to increase production time, quantity and quality of a product, so that I can increase company profit.<br>
 </p>
 <p align="center">
- <img  width=300px height=300px src="https://raw.githubusercontent.com/Watthanail/ICT720_Project_AIOT4/master/Images/README/OverviewDraft01_160124.png"><br></p>
+ <img  width=400px height=300px src="https://raw.githubusercontent.com/Watthanail/ICT720_Project_AIOT4/feature/micro27/Images/README/Overview02_TAIST_ICT720.png"><br></p>
 
 
 #### Acceptance Criteria
