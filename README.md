@@ -1,9 +1,10 @@
 ## ICT720_Project_AIOT4 <img src="https://raw.githubusercontent.com/MartinHeinz/MartinHeinz/master/wave.gif" width="30px">
 
-### 🏢 Domain: Smart Room Hotel
+### 🏢 Domain: Smart Manufacturing Line
 #### Stakeholder
-1. Hotel customer
-2. Hotel owner
+1. Superviser 
+2. Human Resources (HR)
+3. Owner Company
 
 #### User stories
  1. As a supervisor or a HR, I want to know behavior of a worker in working hours, so that I can evaluate the worker's work efficiency.<br>
@@ -14,14 +15,12 @@
 
 
 #### Acceptance Criteria
-
 <ul>
-<li>Facial recognition of room owner for secure room access.</li>
-    
-<li>A website that can control various devices in the room.</li>
+<li>System can detect using of phone in manufacturing line by a worker, and face recognition </li>
 
-<li>Dashboard for operator that can monitor data of each room, checking status of decives within a room.</li>
+<li>Behavior Weekly Reports</li>
 </ul>
+
 
 ### 👩🏻‍💻 Our Members
 1. Wathanai Luealamai 6614552627 <br>
