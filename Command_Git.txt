@@ -38,6 +38,7 @@ git branch
 
 #### Note If you want to delete branch you must to checkout to another branch and follow step##
 git checkout {otherbranch}
+git merge feature/micro27
 git branch -d {Deletebranch}
 
 
