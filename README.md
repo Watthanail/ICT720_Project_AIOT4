@@ -7,6 +7,7 @@
 
 #### User stories
  1. As a supervisor or a HR, I want to know behavior of a worker during working hours, so that I can evaluate the worker's productivity.<br>
+ </p> acceptance criteria #1: knowing when a worker use a phone on a production line during working hours. </p>
  2. As a owner of a company, I want to increase production time, quantity and quality of a product, so that I can boost company profitability.<br>
 </p>
 <p align="center">
