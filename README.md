@@ -15,21 +15,13 @@
      - acceptance criteria #6: I can get a behavior weekly report of my subordinates.   
 
  2. As a HR, I want to get information about inappropriate behaviors of wokers, so that I can evaluate the worker's productivity.<br>
-     - acceptance criteria #1: I can get notification when a worker makes a certain number of misbehavior.  
+     - acceptance criteria #1: I can get a report when a worker makes a certain number of misbehavior.  
      - acceptance criteria #2: I can access to the same report as same as a supervisor.
      - acceptance criteria #3: I cab access to an image record of an inappropriate behavior of the worker.
 
 </p>
 <p align="center">
  <img  width=400px height=300px src="https://raw.githubusercontent.com/Watthanail/ICT720_Project_AIOT4/feature/micro27/Images/README/Overview02_TAIST_ICT720.png"><br></p>
-
-
-#### Acceptance Criteria
-<ul>
-<li>System can detect when a worker use a phone on a production line during working hours, and record the inappropriate behavior of that specific worker by using face recognition technique. </li>
-
-<li>System can report a behavior weekly report of workers by using information from the database. </li>
-</ul>
 
 
 ### 👩🏻‍💻 Our Members
