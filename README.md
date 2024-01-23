@@ -8,11 +8,11 @@
 
 #### User stories
  1. As a supervisor or a HR, I want to know behavior of a worker during working hours, so that I can evaluate the worker's productivity.<br>
- -- acceptance criteria #1: knowing when a worker use a phone on a production line during working hours.
- -- acceptance criteria #2: getting an behavior weekly report of workers by using information from the database.
+   - acceptance criteria #1: knowing when a worker use a phone on a production line during working hours.
+   - acceptance criteria #2: getting an behavior weekly report of workers by using information from the database.
 
  2. Human Resources (HR), I want to correct the recode when a worker doing an inappropriate behavior.<br>
-  -- acceptance criteria #1: having a record of the inappropriate behavior of that specific worker by using face recognition technique.
+   - acceptance criteria #1: having a record of the inappropriate behavior of that specific worker by using face recognition technique.
  3. As a owner of a company, I want to increase production time, quantity and quality of a product, so that I can boost company profitability.<br>
 </p>
 <p align="center">
