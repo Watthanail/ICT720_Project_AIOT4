@@ -21,7 +21,7 @@
 
 ### Overview
 <p align="center">
- <img  width=400px height=300px src="Images/README/overview02.png"><br></p>
+ <img  width=600px height=500px src="Images/README/overview02.png"><br></p>
 
 ### Sequence Diagram Version 0.0
 <ul>
