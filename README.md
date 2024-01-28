@@ -19,9 +19,22 @@
      - acceptance criteria #2: I can access to the same report as same as a supervisor.
      - acceptance criteria #3: I cab access to an image record of an inappropriate behavior of the worker.
 
-</p>
+### Overview
 <p align="center">
  <img  width=400px height=300px src="https://raw.githubusercontent.com/Watthanail/ICT720_Project_AIOT4/feature/micro27/Images/README/Overview02_TAIST_ICT720.png"><br></p>
+
+### Sequence Diagram Version 0.0
+<ul>
+<li><b style="color:rgb(46, 204, 113)">Files Editor via Draw.io : Grant some people can access</b>
+<pre><a href="url">https://drive.google.com/file/d/1w9EUjGDnG5Px11Vg9m29VN9QPpMQNrPN/view?usp=sharing</a> </li>
+</ul>
+<p align="center">
+ <img  width=600px height=350px src="https://raw.githubusercontent.com/Watthanail/ICT720_Project_AIOT4/feature/micro27/Images/README/Sequence_Diagram01.png"><br></p>
+
+ ### Machine Diagram Version 0.0
+ 
+<p align="center">
+ <img  width=900px height=600px src="https://raw.githubusercontent.com/Watthanail/ICT720_Project_AIOT4/feature/micro27/Images/README/State_Machinev01.png"><br></p>
 
 
 ### 👩🏻‍💻 Our Members
