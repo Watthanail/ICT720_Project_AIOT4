@@ -21,7 +21,7 @@
 
 ### Overview
 <p align="center">
- <img  width=400px height=300px src="Images/README/Overview02.png"><br></p>
+ <img  width=400px height=300px src="Images/README/overview02.png"><br></p>
 
 ### Sequence Diagram Version 0.0
 <ul>
@@ -29,7 +29,7 @@
 <pre><a href="url">https://drive.google.com/file/d/1w9EUjGDnG5Px11Vg9m29VN9QPpMQNrPN/view?usp=sharing</a> </li>
 </ul>
 <p align="center">
- <img  width=600px height=350px src="Images/README/Sequence_Diagram02.png"><br></p>
+ <img  width=600px height=350px src="Images/README/sequence_diagram02.png"><br></p>
 
  ### Machine Diagram Version 0.0
  
