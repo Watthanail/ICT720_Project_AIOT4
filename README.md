@@ -36,6 +36,9 @@
 <p align="center">
  <img  width=900px height=600px src="https://raw.githubusercontent.com/Watthanail/ICT720_Project_AIOT4/feature/micro27/Images/README/State_Machinev01.png"><br></p>
 
+### Device operation 0.0
+<p align="center">
+ <img  width=900px height=600px src="https://raw.githubusercontent.com/Watthanail/ICT720_Project_AIOT4/feature/micro27/Images/README/Device_operation.png"><br></p>
 
 ### 👩🏻‍💻 Our Members
 1. Wathanai Luealamai 6614552627 <br>
