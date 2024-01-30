@@ -38,7 +38,7 @@
 
 ### Device operation
 <p align="center">
- <img  width=1200px height=600px src="Images/README/Device_operation.png"><br></p>
+ <img  width=900px height=300px src="Images/README/Device_operation.png"><br></p>
 
 ### 👩🏻‍💻 Our Members
 1. Wathanai Luealamai 6614552627 <br>
