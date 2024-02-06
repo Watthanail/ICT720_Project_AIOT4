@@ -23,6 +23,10 @@
 <p align="center">
  <img  width=600px height=500px src="Images/README/overview02.png"><br></p>
 
+### Architecture
+<p align="center">
+ <img  width=1200px height=500px src="Images/README/Architecture_v1.jpg"><br></p>
+
 ### Sequence Diagram
 <ul>
 <li><b style="color:rgb(46, 204, 113)">Files Editor via Draw.io : Grant some people can access</b>
@@ -34,11 +38,11 @@
  ### Machine Diagram
  
 <p align="center">
- <img  width=900px height=600px src="Images/README/machine_state02.png"><br></p>
+ <img  width=900px height=900px src="Images/README/machine_state02.png"><br></p>
 
 ### Device operation
 <p align="center">
- <img  width=900px height=300px src="Images/README/Device_operation.png"><br></p>
+ <img  width=900px height=600px src="Images/README/Device_operation.png"><br></p>
 
 ### 👩🏻‍💻 Our Members
 1. Wathanai Luealamai 6614552627 <br>
