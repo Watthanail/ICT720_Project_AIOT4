@@ -1,7 +1,7 @@
 -add libraly command 
 pio pkg install -l path
 
--add pinout to  C:\Users\Work\Documents\Arduino\libraries\EloquentEsp32cam\src\eloquent_esp32cam\camera\pinout
+-add pinout to  ICT720_Project_AIOT4\Camera_detect\.pio\libdeps\esp32s3box\EloquentEsp32cam\src\eloquent_esp32cam\camera\pinout.h
                 void lilygo_s3_box() { //
                     pins.d0 = 11;
                     pins.d1 = 9;
