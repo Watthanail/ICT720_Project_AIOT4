@@ -44,6 +44,10 @@
 <p align="center">
  <img  width=900px height=600px src="Images/README/Device_operation.png"><br></p>
 
+### Database diagram
+<p align="center">
+ <img  width=900px height=600px src="Images/README/Database_diagram.jpg"><br></p>
+
 ### 👩🏻‍💻 Our Members
 1. Wathanai Luealamai 6614552627 <br>
 2. Kiattisak Phetmeesri 6614552635 <br>

@@ -2,7 +2,7 @@ import json, rpc, serial, serial.tools.list_ports, struct, sys
 from datetime import datetime
 import time
 
-rpc_master = rpc.rpc_usb_vcp_master('COM86')
+rpc_master = rpc.rpc_usb_vcp_master('COM7')
 result = rpc_master.call("jpeg_image_snapshot", recv_timeout=10000)
 print(dir(result))
 print(result.nbytes)
