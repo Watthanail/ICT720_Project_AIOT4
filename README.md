@@ -21,21 +21,32 @@
 
 ### Overview
 <p align="center">
- <img  width=400px height=300px src="https://raw.githubusercontent.com/Watthanail/ICT720_Project_AIOT4/feature/micro27/Images/README/Overview02_TAIST_ICT720.png"><br></p>
+ <img  width=600px height=500px src="Images/README/overview02.png"><br></p>
 
-### Sequence Diagram Version 0.0
+### Architecture
+<p align="center">
+ <img  width=1200px height=500px src="Images/README/Architecture_v1.jpg"><br></p>
+
+### Sequence Diagram
 <ul>
 <li><b style="color:rgb(46, 204, 113)">Files Editor via Draw.io : Grant some people can access</b>
 <pre><a href="url">https://drive.google.com/file/d/1w9EUjGDnG5Px11Vg9m29VN9QPpMQNrPN/view?usp=sharing</a> </li>
 </ul>
 <p align="center">
- <img  width=600px height=350px src="https://raw.githubusercontent.com/Watthanail/ICT720_Project_AIOT4/feature/micro27/Images/README/Sequence_Diagram01.png"><br></p>
+ <img  width=600px height=350px src="Images/README/sequence_diagram02.png"><br></p>
 
- ### Machine Diagram Version 0.0
+ ### Machine Diagram
  
 <p align="center">
- <img  width=900px height=600px src="https://raw.githubusercontent.com/Watthanail/ICT720_Project_AIOT4/feature/micro27/Images/README/State_Machinev01.png"><br></p>
+ <img  width=900px height=900px src="Images/README/machine_state02.png"><br></p>
 
+### Device operation
+<p align="center">
+ <img  width=900px height=600px src="Images/README/Device_operation.png"><br></p>
+
+### Database diagram
+<p align="center">
+ <img  width=900px height=600px src="Images/README/Database_diagram.jpg"><br></p>
 
 ### 👩🏻‍💻 Our Members
 1. Wathanai Luealamai 6614552627 <br>
