@@ -47,7 +47,7 @@
 
 ### Overview
 <p align="center">
- <img  width=600px height=500px src="Images/README/overview02.png"><br></p>
+ <img  width=600px height=500px src="Images/README/Overview02_TAIST_ICT720.png"><br></p>
 
 ### Architecture
 <p align="center">
@@ -76,10 +76,10 @@
 
 ### Training Model
 <p align="center">
- <img  width=900px height=600px src="Images/README/ML00.jpg"><br></p>
+ <img  width=500px height=300px src="Images/README/ML00.jpg"><br></p>
 <p align="center">
- <img  width=900px height=600px src="Images/README/ML01.jpg"><br></p>
-
+ <img  width=500px height=300px src="Images/README/ML01.jpg"><br></p>
+ <img  width=500px height=300px src="Images/README/ML03.png"><br></p>
 ### 👩🏻‍💻 Our Members
 1. Wathanai Luealamai 6614552627 <br>
 2. Kiattisak Phetmeesri 6614552635 <br>
