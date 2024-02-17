@@ -1,5 +1,31 @@
 ## ICT720_Project_AIOT4 <img src="https://raw.githubusercontent.com/MartinHeinz/MartinHeinz/master/wave.gif" width="30px">
 
+  <summary>Table of Contents</summary>
+  <ol>
+    <li>
+      <a href="#Domain:-Smart-Production-Line">Domain: Smart Production Line</a>
+      <ul>
+        <li><a href="#Stakeholder">Stakeholder</a></li>
+        <li><a href="#User-stories">User stories</a></li>
+      </ul>
+    </li>
+    <li>
+      <a href="#overview">Getting Started</a>
+      <ul>
+        <li><a href="#overview">Overview</a></li>
+        <li><a href="#architecture">Architecture</a></li>
+        <li><a href="#Sequence-Diagram">Sequence Diagram</a></li>
+        <li><a href="#machine-diagram">Machine Diagram</a></li>
+        <li><a href="#device-operation">Device operation</a></li>
+      </ul>
+    </li>
+    <li><a href="#database-diagram">Database</a></li>
+    <li><a href="#training-model">Model Training</a></li>
+  </ol>
+
+
+
+
 ### 🏢 Domain: Smart Production Line
 #### Stakeholder
 1. Supervisor
@@ -21,7 +47,7 @@
 
 ### Overview
 <p align="center">
- <img  width=600px height=500px src="Images/README/overview02.png"><br></p>
+ <img  width=600px height=500px src="Images/README/Overview02_TAIST_ICT720.png"><br></p>
 
 ### Architecture
 <p align="center">
@@ -48,6 +74,12 @@
 <p align="center">
  <img  width=900px height=600px src="Images/README/Database_diagram.jpg"><br></p>
 
+### Training Model
+<p align="center">
+ <img  width=500px height=300px src="Images/README/ML00.jpg"><br></p>
+<p align="center">
+ <img  width=500px height=300px src="Images/README/ML01.jpg"><br></p>
+ <img  width=500px height=300px src="Images/README/ML03.png"><br></p>
 ### 👩🏻‍💻 Our Members
 1. Wathanai Luealamai 6614552627 <br>
 2. Kiattisak Phetmeesri 6614552635 <br>
