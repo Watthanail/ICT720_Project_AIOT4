@@ -13,16 +13,26 @@ import rpc
 import requests
 from datetime import datetime
 
+class ImgLabel(QtWidgets.QLabel):
+    clicked = QtCore.Signal()
 
+    def mousePressEvent(self, ev: QtGui.QMouseEvent):
+        self.status = 'CLICKED'
+        self.pos_1st = ev.position()
+        self.clicked.emit()
+        return super().mousePressEvent(ev)
+    
+    def mouseReleaseEvent(self, ev: QtGui.QMouseEvent) -> None:
+        self.status = 'RELEASED'
+        self.pos_2nd = ev.position()
+        self.clicked.emit()
+        return super().mouseReleaseEvent(ev)
 
 class EspCamWidget(QtWidgets.QWidget):
     def __init__(self):
         super().__init__()
         self.ser_ports = [port for (port,desc,hwid) in serial.tools.list_ports.comports()]
         self.populate_ui()
-        self.timer = QtCore.QTimer(self)
-        self.timer.timeout.connect(self.grab_image)
-        self.timer.start(100)  # Update image every second
 
     def populate_ui(self):
         self.main_layout = QtWidgets.QHBoxLayout(self)
@@ -35,7 +45,7 @@ class EspCamWidget(QtWidgets.QWidget):
         self.image_layout = QtWidgets.QVBoxLayout()
         self.image_layout.setAlignment(QtCore.Qt.AlignTop)
         #self.preview_img = QtWidgets.QLabel("Preview Image")
-        # self.preview_img = ImgLabel("Preview Image")
+        self.preview_img = ImgLabel("Preview Image")
         self.preview_img.resize(320, 240)
         self.preview_img.clicked.connect(self.label_image)
         self.image_layout.addWidget(self.preview_img)
@@ -76,7 +86,6 @@ class EspCamWidget(QtWidgets.QWidget):
         Tstart = datetime.now()
         print("Snapshot start...")
         result = self.rpc_master.call("jpeg_image_snapshot", recv_timeout=1000)
-        print(result)
         print(str(datetime.now() - Tstart)  + ': ' + str(result))
         if result is not None:
             jpg_sz = int.from_bytes(result.tobytes(), "little")
