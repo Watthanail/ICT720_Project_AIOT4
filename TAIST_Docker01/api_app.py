@@ -57,7 +57,7 @@ async def api(dev_id: str, request: Request):
     # 
     if app.last_mqtt_msg is not None:
         if app.last_mqtt_msg['dev_id']== dev_id:
-                resp['data'] = app.last_mqtt_msg
+            resp['data'] = app.last_mqtt_msg
         else:
             resp['data'] ="No device found"
     else:

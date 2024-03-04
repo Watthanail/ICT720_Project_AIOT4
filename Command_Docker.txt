@@ -1,0 +1,74 @@
+### Docker -v ####
+docker system info
+docker system df
+docker system events  //monitor event docker//
+docker images
+docker image inspect  <image>
+docker image rm <name>
+##### Show container ###
+docker ps // container run
+docker ps --all // container all
+
+#### setup command ####
+docker run {image} echo 'hello world in docker'
+
+##### stop###
+docker stop {id_container}
+
+
+---------------------------Cycle Docker-------------
+
+docker run <image>
+    -- docker pull <image>
+    -- docker create <container>
+    -- docker start <container>   // Note docker start -a <continer id>
+
+
+#### Delete Docker #####
+
+docker rm  <container id >
+!!!! Note ___ docker system prune ___ //Delete container all  not use
+
+
+### cmd container####
+
+docker exec <id_container> ls
+docker exec <id_container> echo 'hello nginx'
+docker exec -it <id_container> sh   //connect id container
+        --exit ( log out in shell cmd)
+docker exec -it <id_container> bash
+
+
+Note  folder etc (file config)
+
+
+****** run Forground ***** 
+    docker run -p xx:80 nginx
+
+****** run Background detrack ***
+    docker run -d -p xx:80 nignx
+    docker run --name <name> -p xx:80 nginx
+
+##### Log out put #####
+docker logs <container_id>
+
+    ---- docker logs -f <container_id>  // follow log
+
+
+
+#### Create network #####
+docker image ls
+docker network create <image network>
+docker network connect <image network>
+
+### example run  ####
+docker run --name phpmyadmin -d -e PMA_ARBITRARY=1 -p 8080:80 phpmyadmin/phpmyadmin
+docker network inspect
+
+docker run --name wordpress -p 888:80 -e WORDPRESS_DB_HOST=mysql -e WORDPRESS_DB_USER=root -e 
+WORDPRESS_DB_PASSWORD=1111 -d wordpress
+
+
+docker run -it -p 8000:8000
+
+localhost:8000/api/dev_supcahi
