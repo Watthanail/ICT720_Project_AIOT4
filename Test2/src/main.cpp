@@ -25,6 +25,7 @@ static bool debug_nn = false; // Set this to true to see e.g. features generated
 uint32_t width = 240; 
 uint32_t height = 240;
 uint8_t *snapshot_buf; //points to the output of the capture
+char *detection_info[6]={"0", "0", "0", "0", "0", "0"};
 
 openmv::rpc_scratch_buffer<256> scratch_buffer;
 openmv::rpc_callback_buffer<8> callback_buffer;
@@ -38,7 +39,7 @@ size_t jpeg_image_snapshot_callback(void *out_data);
 size_t jpeg_image_read_callback(void *out_data);
 
 static int ei_camera_get_data(size_t offset, size_t length, float *out_ptr);
-size_t detect_obj_callback();
+void detect_obj();
 size_t sent_information_callback(void *out_data);
 
 
@@ -56,77 +57,34 @@ void setup() {
 
 // main loop
 void loop() {
+  // Serial.print("start");
+
+  // instead of wait_ms, we'll wait on the signal, this allows threads to cancel us...
+  if (ei_sleep(5) != EI_IMPULSE_OK) {
+      return;
+  }
+
+  // Allocate memory for each string
+  for (int i = 0; i < 6; ++i) {
+    detection_info[i] = (char*)malloc(10 * sizeof(char)); // Allocate enough memory
+    if (detection_info[i] == NULL) {
+      ESP_LOGI(TAG, "Memory allocation failed");
+      exit(EXIT_FAILURE);
+    }
+  }
   if (read_flag) {
     rpc_slave.put_bytes(jpg_buf, jpg_sz, 10000);
     read_flag = false;
   }
+  detect_obj();
   rpc_slave.loop();
-//   // rpc_slave.loop();
-//   Serial.print("start");
-//   // instead of wait_ms, we'll wait on the signal, this allows threads to cancel us...
-//   if (ei_sleep(5) != EI_IMPULSE_OK) {
-//       return;
-//   }
 
-//   // hw_camera_raw_snapshot(jpg_buf, &width, &height);
-//   // hw_camera_jpg_snapshot(jpg_buf);
+  // Free allocated memory
+  for (int i = 0; i < 6; ++i) {
+    free(detection_info[i]);
+  }
 
-//   snapshot_buf = (uint8_t*)malloc(EI_CAMERA_RAW_FRAME_BUFFER_COLS * EI_CAMERA_RAW_FRAME_BUFFER_ROWS * EI_CAMERA_FRAME_BYTE_SIZE);
-
-//   // check if allocation was successful
-//   if(snapshot_buf == nullptr) {
-//       ei_printf("ERR: Failed to allocate snapshot buffer!\n");
-//       return;
-//   }
-
-//   // camera snapshot in JPEG, then convert to BMP
-//   hw_camera_raw_snapshot(snapshot_buf, &width, &height);
-
-//   ei::signal_t signal;
-//   signal.total_length = EI_CLASSIFIER_INPUT_WIDTH * EI_CLASSIFIER_INPUT_HEIGHT;
-//   signal.get_data = &ei_camera_get_data;
-
-
-//   // Run the classifier
-//   ei_impulse_result_t result = { 0 };
-
-//   EI_IMPULSE_ERROR err = run_classifier(&signal, &result, debug_nn);
-//   if (err != EI_IMPULSE_OK) {
-//       ei_printf("ERR: Failed to run classifier (%d)\n", err);
-//       return;
-//   }
-
-//   // print the predictions
-//   ei_printf("Predictions (DSP: %d ms., Classification: %d ms., Anomaly: %d ms.): \n",
-//               result.timing.dsp, result.timing.classification, result.timing.anomaly);
-
-// #if EI_CLASSIFIER_OBJECT_DETECTION == 1
-//     bool bb_found = result.bounding_boxes[0].value > 0;
-//     for (size_t ix = 0; ix < result.bounding_boxes_count; ix++) {
-//         auto bb = result.bounding_boxes[ix];
-//         if (bb.value == 0) {
-//             continue;
-//         }
-//         ei_printf("    %s (%f) [ x: %u, y: %u, width: %u, height: %u ]\n", bb.label, bb.value, bb.x, bb.y, bb.width, bb.height);
-//     }
-//     if (!bb_found) {
-//         ei_printf("    No objects found\n");
-//     }
-// #else
-//     for (size_t ix = 0; ix < EI_CLASSIFIER_LABEL_COUNT; ix++) {
-//         ei_printf("    %s: %.5f\n", result.classification[ix].label,
-//                                     result.classification[ix].value);
-//     }
-// #endif
-
-// #if EI_CLASSIFIER_HAS_ANOMALY == 1
-//         ei_printf("    anomaly score: %.3f\n", result.anomaly);
-// #endif
-
-//   // end check
-//   Serial.print("Hee\n");
-//   free(snapshot_buf);
-//   // delay(2000);
+  // Serial.print("end");
 }
 
 // Print memory information
@@ -178,13 +136,82 @@ static int ei_camera_get_data(size_t offset, size_t length, float *out_ptr) {
 }
 
 // object detection
-size_t detect_obj_callback(void *out_data) {
-  
+void detect_obj() {
+  snapshot_buf = (uint8_t*)malloc(EI_CAMERA_RAW_FRAME_BUFFER_COLS * EI_CAMERA_RAW_FRAME_BUFFER_ROWS * EI_CAMERA_FRAME_BYTE_SIZE);
+
+  // check if allocation was successful
+  if(snapshot_buf == nullptr) {
+      ei_printf("ERR: Failed to allocate snapshot buffer!\n");
+      return;
+  }
+
+  // camera snapshot in JPEG, then convert to BMP
+  hw_camera_raw_snapshot(snapshot_buf, &width, &height);
+
+  ei::signal_t signal;
+  signal.total_length = EI_CLASSIFIER_INPUT_WIDTH * EI_CLASSIFIER_INPUT_HEIGHT;
+  signal.get_data = &ei_camera_get_data;
+
+
+  // Run the classifier
+  ei_impulse_result_t result = { 0 };
+
+  EI_IMPULSE_ERROR err = run_classifier(&signal, &result, debug_nn);
+  if (err != EI_IMPULSE_OK) {
+      ei_printf("ERR: Failed to run classifier (%d)\n", err);
+      return;
+  }
+
+  // print the predictions
+  ei_printf("Predictions (DSP: %d ms., Classification: %d ms., Anomaly: %d ms.): \n",
+              result.timing.dsp, result.timing.classification, result.timing.anomaly);
+
+
+#if EI_CLASSIFIER_OBJECT_DETECTION == 1
+    bool bb_found = result.bounding_boxes[0].value > 0;
+    for (size_t ix = 0; ix < result.bounding_boxes_count; ix++) {
+        auto bb = result.bounding_boxes[ix];
+        if (bb.value == 0) {
+            continue;  
+        }
+        ei_printf("    %s (%f) [ x: %u, y: %u, width: %u, height: %u ]\n", bb.label, bb.value, bb.x, bb.y, bb.width, bb.height);
+        sprintf(detection_info[0], "%s", "No"); // Objects found
+        strcpy(detection_info[1], bb.label); // Object type
+        sprintf(detection_info[2], "%f", bb.value); // probability
+        sprintf(detection_info[3], "%u", bb.x); // x coordinate
+        sprintf(detection_info[4], "%u", bb.y); // y coordinate
+        sprintf(detection_info[5], "%u", bb.width); // bb width
+        sprintf(detection_info[6], "%u", bb.height); // bb height
+        
+    }
+    if (!bb_found) {
+        ei_printf("    No objects found\n");
+        sprintf(detection_info[0], "%s", "No"); // Not objects found
+        sprintf(detection_info[1], "%f", 1.521); // probability
+        sprintf(detection_info[2], "%u", 3); // x coordinate
+        sprintf(detection_info[3], "%u", 4); // y coordinate
+        sprintf(detection_info[4], "%u", 5); // bb width
+        sprintf(detection_info[5], "%u", 6); // bb height
+    } 
+#else
+    for (size_t ix = 0; ix < EI_CLASSIFIER_LABEL_COUNT; ix++) {
+        ei_printf("    %s: %.5f\n", result.classification[ix].label,
+                                    result.classification[ix].value);
+    }
+#endif
+
+#if EI_CLASSIFIER_HAS_ANOMALY == 1
+        ei_printf("    anomaly score: %.3f\n", result.anomaly);
+#endif
+
+  free(snapshot_buf);
 }
 
 
 //for send infor
 size_t sent_information_callback(void *out_data) {
+  
+  // use detection_info
   // return 0;
   // int
   // uint8_t state = 15;
@@ -192,9 +219,9 @@ size_t sent_information_callback(void *out_data) {
   // return sizeof(state);
 
   // string 1
-  String state = "Fck U";
-  memcpy(out_data, &state, state.length()+1);
-  return sizeof(state);
+  // String state = "Fck U";
+  // memcpy(out_data, &state, state.length()+1);
+  // return sizeof(state);
   
   // string 2
   // String state = "Fck U";
@@ -208,5 +235,32 @@ size_t sent_information_callback(void *out_data) {
   // char* state = "Fck U";
   // memcpy(out_data, &state, strlen(state)+1);
   // return sizeof(state);
+
+  // array int
+  // int a = 10, b = 20, c = 30;
+  // const int* state[3] = {&a, &b, &c};
+  // size_t totalSize = 0;
+  // for (int i = 0; i < 3; ++i) {
+  //     memcpy((char*)out_data+i, state[i], sizeof(int));
+  // }
+  // return sizeof(state) / sizeof(state[0]);
+
+  // array string
+  // const char* state[3] = {"50", "hello", "20"};
+  // size_t totalSize = 0;
+  // for (int i = 0; i < 3; ++i) {
+  //     strcpy((char*)out_data + totalSize, state[i]);
+  //     totalSize += strlen(state[i]) + 1;
+  // }
+  // return totalSize;
+
+  // array string
+  size_t totalSize = 0;
+  for (int i = 0; i < 6; ++i) {
+    strcpy((char*)out_data + totalSize, detection_info[i]);
+    totalSize += strlen(detection_info[i]) + 1;
+  }
+  return totalSize;
+
 }
 

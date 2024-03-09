@@ -89,6 +89,7 @@ class EspCamWidget(QtWidgets.QWidget):
         print("Snapshot start...")
         result = self.rpc_master.call("jpeg_image_snapshot", recv_timeout=1000)
         print(str(datetime.now() - Tstart)  + ': ' + str(result))
+
         if result is not None:
             jpg_sz = int.from_bytes(result.tobytes(), "little")
             print("Image size: ", jpg_sz)
@@ -98,23 +99,56 @@ class EspCamWidget(QtWidgets.QWidget):
             result = self.rpc_master.call("jpeg_image_read", recv_timeout=1000)
             self.rpc_master.get_bytes(self.buf, jpg_sz)
             print(str(datetime.now() - Tstart))
-            # # print(buf)
-            # img = cv2.imread("test.jpg")
             self.img = cv2.imdecode(np.frombuffer(self.buf, dtype=np.uint8), cv2.IMREAD_COLOR)
             self.update_image(self.img.copy())
+        else:
+            print("image is None")
 
 
         ##### test output
-        result = self.rpc_master.call("sent_information", recv_timeout=1000)
-        # print(result)
+        results = self.rpc_master.call("sent_information", recv_timeout=1000)
+        # print(results)
+
         # ### int
-        # integer = int.from_bytes(result.tobytes(), "little")
+        # integer = int.from_bytes(results.tobytes(), "little")
         # print(f"noob: {integer}")
+
         ### string
-        ## result_bytes = bytes(result)
-        ## string_data = result_bytes.decode('utf-8')
-        string_data = bytes(result).decode('utf-8')
-        print(f"noob: {string_data}")
+        # result_bytes = bytes(results)
+        # string_data = result_bytes.decode('utf-8')
+        # string_data = bytes(results).decode('utf-8')
+        # print(f"noob: {string_data}")
+
+        ### array of int
+        # for data in results:
+        #     print(f"noob: {data}")
+
+        ### array of string
+        # for data in results:
+        #     print(f"noob: {data}")
+        # ascii_string = ''.join(chr(data) for data in results)
+        # # Split the string by null characters to create an array
+        # array_data = ascii_string.split('\0')
+        # # Remove the last empty element created by the trailing null character
+        # if array_data[-1] == '':
+        #     array_data.pop()
+        # # Print the array data
+        # for data in array_data:
+        #     print(data)
+
+        ### array of string
+        if results is not None:
+            # Convert ASCII numbers to characters and join them with '0' separator
+            ascii_string = ''.join(chr(data) for data in results)
+
+            # Split the resulting string by '0' and filter out empty strings
+            strings = filter(None, ascii_string.split('\x00'))
+
+            # Print each string
+            for string in strings:
+                print(string)
+        else:
+            print("No data received from RPC call")
 
 
 
