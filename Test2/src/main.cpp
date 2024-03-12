@@ -145,13 +145,27 @@ void detect_obj() {
       return;
   }
 
-  // camera snapshot in JPEG, then convert to BMP
-  hw_camera_raw_snapshot(snapshot_buf, &width, &height);
-
   ei::signal_t signal;
   signal.total_length = EI_CLASSIFIER_INPUT_WIDTH * EI_CLASSIFIER_INPUT_HEIGHT;
   signal.get_data = &ei_camera_get_data;
 
+  // camera snapshot in JPEG, then convert to BMP
+  hw_camera_raw_snapshot(snapshot_buf, &width, &height);
+
+  // resize
+  bool do_resize = false;
+  if ((width != EI_CAMERA_RAW_FRAME_BUFFER_COLS) || (height != EI_CAMERA_RAW_FRAME_BUFFER_ROWS)) {
+    do_resize = true;
+  }
+  if (do_resize) {
+    ei::image::processing::crop_and_interpolate_rgb888(
+    snapshot_buf,
+    EI_CAMERA_RAW_FRAME_BUFFER_COLS,
+    EI_CAMERA_RAW_FRAME_BUFFER_ROWS,
+    snapshot_buf,
+    width,
+    height);
+    }
 
   // Run the classifier
   ei_impulse_result_t result = { 0 };

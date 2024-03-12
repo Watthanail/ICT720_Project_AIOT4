@@ -131,22 +131,22 @@ void hw_camera_raw_snapshot(uint8_t *buffer, uint32_t *width, uint32_t *height) 
     fb = esp_camera_fb_get();
     if (fb) {
         // ESP_LOGI(TAG, "Camera capture success: %dx%d", fb->width, fb->height);
-        // Serial.print("Camera capture success");
+        Serial.print("Camera capture success");
     } else {
         // ESP_LOGE(TAG, "Camera capture failed");
-        // Serial.print("Camera capture failed");
+        Serial.print("Camera capture failed");
     }
 
     bool converted = fmt2rgb888(fb->buf, fb->len, PIXFORMAT_JPEG, buffer);
     if (!converted) {
         // ESP_LOGE(TAG, "BMP conversion failed");
-        // Serial.print("BMP conversion failed");
+        Serial.print("BMP conversion failed");
         *width = 0;
         *height = 0;
     } else {
-        // Serial.print("BMP conversion sucess");
+        Serial.print("BMP conversion sucess");
     }
     esp_camera_fb_return(fb);
-    *width = 240;
-    *height = 240;
+    // *width = 240;
+    // *height = 240;
 }
