@@ -73,7 +73,7 @@
 #else
 #error "Camera model not selected"
 #endif
-
+https://github.com/vsupacha/ict720-project-2024/tree/main/examples/taist_mar_14
 /* Constant defines -------------------------------------------------------- */
 #define EI_CAMERA_RAW_FRAME_BUFFER_COLS           320
 #define EI_CAMERA_RAW_FRAME_BUFFER_ROWS           240
