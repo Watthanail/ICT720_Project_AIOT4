@@ -1,0 +1,52 @@
+#include <stdio.h>
+
+// Function to print binary representation of a 32-bit integer
+void printBinary8(unsigned int num) {
+    for (int i = 31; i >= 0; --i) {
+        printf("%d", (num & (1 << i)) ? 1 : 0);
+        if (i % 8 == 0) printf(" ");
+    }
+    printf("\n");
+}
+
+// Function to print binary representation of a 32-bit integer
+void printBinary32(unsigned int num) {
+    for (int i = 31; i >= 0; --i) {
+        printf("%d", (num & (1 << i)) ? 1 : 0);
+        if (i % 8 == 0) printf(" ");
+    }
+    printf("\n");
+}
+
+int main() {
+    // Example pixel values (127, 127, 127) in RGB888 format
+    unsigned char snapshot_buf[3] = {255, 255, 255};
+    printf("1 pixel = 24bit RGB : (%u, %u, %u)\n", snapshot_buf[0], snapshot_buf[1], snapshot_buf[2]);
+    // Display binary representation of original RGB values
+    printf("Original RGB values:\n");
+    for (int i = 0; i < 3; ++i) {
+        printBinary8(snapshot_buf[i]);
+    }
+
+    // Combine RGB channels into a 32-bit integer
+    unsigned int combined_value = (snapshot_buf[0] << 16) + (snapshot_buf[1] << 8) + snapshot_buf[2];
+    printf("\n-----After shifing-----\n");
+    printf("turn RGB into 32bit: (%u, %u, %u)\n", (snapshot_buf[0] << 16), (snapshot_buf[1] << 8), snapshot_buf[2]);
+    printf("\nthen sum it up to be the 32 bit integer value\n");
+
+    // Display binary representation of combined 32-bit integer
+    printf("Combined 32-bit integer: %u\n", combined_value);
+    printBinary32(combined_value);
+
+    // Convert the 32-bit integer to a float
+    float float_value = *(float*)&combined_value;
+
+    // Display binary representation of the resulting float
+    printf("\n1 pixel = 32bit = 1 Float value (interpreted):\n");
+    printf("Float value: %f\n", float_value);
+    printBinary32(*(unsigned int*)&float_value);
+
+
+
+    return 0;
+}
