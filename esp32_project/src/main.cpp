@@ -73,13 +73,13 @@ void loop() {
     read_flag = false;
     }
 
-  // if (ei_sleep(5) != EI_IMPULSE_OK) {
-  // //The ei_sleep() returns EI_IMPULSE_OK if it successfully slept for the specified duration.
-  // return;
-  // }
-  // obj_detection_callback();
-  // ei_printf("\nStarting continious inference in 2 seconds...\n");
-  // ei_sleep(2000);
+  if (ei_sleep(5) != EI_IMPULSE_OK) {
+  //The ei_sleep() returns EI_IMPULSE_OK if it successfully slept for the specified duration.
+  return;
+  }
+  obj_detection_callback();
+  ei_printf("\nStarting continious inference in 2 seconds...\n");
+  ei_sleep(2000);
 
   rpc_slave.loop();
   
