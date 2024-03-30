@@ -1,0 +1,160 @@
+#include "main.h"
+#include "hw_camera.h"
+#include <Workshop01_inferencing.h>
+#include "edge-impulse-sdk/dsp/image/image.hpp"
+#include "openmvrpc.h"
+
+// Constants
+#define TAG           "main"
+#define BTN_PIN       0
+#define EI_CAMERA_RAW_FRAME_BUFFER_COLS  240
+#define EI_CAMERA_RAW_FRAME_BUFFER_ROWS  240
+#define EI_CAMERA_FRAME_BYTE_SIZE        3
+#define BMP_BUF_SIZE                     (EI_CAMERA_RAW_FRAME_BUFFER_COLS * EI_CAMERA_RAW_FRAME_BUFFER_ROWS * EI_CAMERA_FRAME_BYTE_SIZE)
+
+// Static variables
+static uint8_t *bmp_buf;
+
+openmv::rpc_scratch_buffer<256> scratch_buffer;
+openmv::rpc_callback_buffer<8> callback_buffer;
+openmv::rpc_hardware_serial_uart_slave rpc_slave;
+
+// Static function declarations
+
+static size_t jpeg_image_snapshot_callback(void *out_data);
+static void ei_prepare_feature(uint8_t *img_buf, signal_t *signal);
+static int ei_get_feature_callback(size_t offset, size_t length, float *out_ptr);
+static void ei_use_result(ei_impulse_result_t result);
+static size_t ei_use_result_callback(void *out_data);
+// size_t button_read_callback(void *out_data);
+static bool read_flag = false;
+// Initialize hardware
+void setup() {
+  Serial.begin(115200);
+  hw_camera_init();
+  bmp_buf = (uint8_t*)ps_malloc(BMP_BUF_SIZE);
+ 
+  rpc_slave.register_callback(F("jpeg_image_snapshot"), jpeg_image_snapshot_callback);
+  rpc_slave.register_callback(F("ei_use_result"), ei_use_result_callback);
+  rpc_slave.begin();
+}
+
+// Main loop
+void loop() {
+  // Process RPC requests
+  rpc_slave.loop(); 
+
+
+    uint32_t width, height;
+
+    hw_camera_raw_snapshot(bmp_buf, &width, &height);
+    
+    ei::signal_t signal;
+    ei_prepare_feature(bmp_buf, &signal);
+
+    // Run classifier
+
+    ei_impulse_result_t result = { 0 };
+    bool debug_nn = false;
+    run_classifier(&signal, &result, debug_nn);
+ 
+    // Use result
+    ei_use_result(result);
+
+    // Transmit image and classification result over RPC if needed
+
+
+}
+
+
+// Prepare feature
+void ei_prepare_feature(uint8_t *img_buf, signal_t *signal) {
+  signal->total_length = EI_CLASSIFIER_INPUT_WIDTH * EI_CLASSIFIER_INPUT_HEIGHT;
+  signal->get_data = &ei_get_feature_callback;
+  if ((EI_CAMERA_RAW_FRAME_BUFFER_ROWS != EI_CLASSIFIER_INPUT_WIDTH) || (EI_CAMERA_RAW_FRAME_BUFFER_COLS != EI_CLASSIFIER_INPUT_HEIGHT)) {
+    ei::image::processing::crop_and_interpolate_rgb888(
+      img_buf,
+      EI_CAMERA_RAW_FRAME_BUFFER_COLS,
+      EI_CAMERA_RAW_FRAME_BUFFER_ROWS,
+      img_buf,
+      EI_CLASSIFIER_INPUT_WIDTH,
+      EI_CLASSIFIER_INPUT_HEIGHT);
+  }
+}
+
+// Get feature callback
+int ei_get_feature_callback(size_t offset, size_t length, float *out_ptr) {
+  size_t pixel_ix = offset * 3;
+  size_t pixels_left = length;
+  size_t out_ptr_ix = 0;
+
+  while (pixels_left != 0) {
+    out_ptr[out_ptr_ix] = (bmp_buf[pixel_ix] << 16) + (bmp_buf[pixel_ix + 1] << 8) + bmp_buf[pixel_ix + 2];
+
+    // Go to the next pixel
+    out_ptr_ix++;
+    pixel_ix += 3;
+    pixels_left--;
+  }
+  return 0;
+}
+
+// Use result from classifier
+void ei_use_result(ei_impulse_result_t result) {
+  ESP_LOGI(TAG, "Predictions (DSP: %d ms., Classification: %d ms., Anomaly: %d ms.)",
+           result.timing.dsp, result.timing.classification, result.timing.anomaly);
+  bool bb_found = result.bounding_boxes[0].value > 0;
+  for (size_t ix = 0; ix < result.bounding_boxes_count; ix++) {
+    auto bb = result.bounding_boxes[ix];
+    if (bb.value == 0) {
+      continue;
+    }
+    ESP_LOGI(TAG, "%s (%f) [ x: %u, y: %u, width: %u, height: %u ]", bb.label, bb.value, bb.x, bb.y, bb.width, bb.height);
+  }
+  if (!bb_found) {
+    ESP_LOGI(TAG, "No objects found");
+  }
+}
+
+// Callback function to take a JPEG snapshot
+size_t jpeg_image_snapshot_callback(void *out_data) {
+  uint32_t width, height;
+  hw_camera_raw_snapshot(bmp_buf, &width, &height);
+  
+  // Transmit image data over RPC
+  rpc_slave.put_bytes(bmp_buf, BMP_BUF_SIZE, 10000);
+
+  return 0;
+}
+
+
+// Callback function to execute ei_use_result via RPC
+size_t ei_use_result_callback(void *out_data) {
+  // Perform the actions of ei_use_result
+  ei_impulse_result_t result;
+  memcpy(&result, out_data, sizeof(ei_impulse_result_t));
+  
+  // Log the predictions and bounding box information
+  ESP_LOGI(TAG, "Predictions (DSP: %d ms., Classification: %d ms., Anomaly: %d ms.)",
+           result.timing.dsp, result.timing.classification, result.timing.anomaly);
+  bool bb_found = result.bounding_boxes[0].value > 0;
+  for (size_t ix = 0; ix < result.bounding_boxes_count; ix++) {
+    auto bb = result.bounding_boxes[ix];
+    if (bb.value == 0) {
+      continue;
+    }
+    ESP_LOGI(TAG, "%s (%f) [ x: %u, y: %u, width: %u, height: %u ]", bb.label, bb.value, bb.x, bb.y, bb.width, bb.height);
+  }
+  if (!bb_found) {
+    ESP_LOGI(TAG, "No objects found");
+  }
+
+  // Return the number of bytes written
+  return sizeof(ei_impulse_result_t);
+}
+
+// start reading image
+size_t jpeg_image_read_callback(void *out_data) {
+  read_flag = true;
+  return 0;
+}
