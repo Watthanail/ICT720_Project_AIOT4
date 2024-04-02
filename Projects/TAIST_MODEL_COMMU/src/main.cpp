@@ -24,12 +24,12 @@
 // GLOBAL VARIABLES
 /////////////////////////////////////////////
 
-#define CFG_WIFI_SSID "xxxxx"
-#define CFG_WIFI_PASS "xxxx"
+#define CFG_WIFI_SSID "AIS_2.4G"
+#define CFG_WIFI_PASS "nice2meetu"
 #define CFG_MQTT_SERVER "emqx.taist.online"
 #define CFG_MQTT_PORT 1883
-#define CFG_MQTT_USER "xxx"
-#define CFG_MQTT_PASS "xxxxx"
+#define CFG_MQTT_USER "taist2024"
+#define CFG_MQTT_PASS "taist2024"
 #define MQTT_HB_TOPIC "taist2024/aiot/heartbeat/dev_8" // public
 
 #define EI_CAMERA_RAW_FRAME_BUFFER_COLS 240
@@ -61,31 +61,36 @@ void setup()
 {
   Serial.begin(115200);
   WiFi.begin(CFG_WIFI_SSID, CFG_WIFI_PASS);
-  while (WiFi.status() != WL_CONNECTED) {
-      delay(1000);
-      Serial.println("Connecting to WiFi...");
+  while (WiFi.status() != WL_CONNECTED)
+  {
+    delay(1000);
+    Serial.println("Connecting to WiFi...");
   }
   mqtt_client.setServer(CFG_MQTT_SERVER, CFG_MQTT_PORT);
-  while (!mqtt_client.connected()) {
-      if (mqtt_client.connect("taist_watthanai", CFG_MQTT_USER, CFG_MQTT_PASS)) {
-          Serial.println("Connected to MQTT broker");
-      } else {
-          Serial.print("Failed to connect to MQTT broker, rc=");
-          Serial.println(mqtt_client.state());
-          delay(2000);
-      }
+  while (!mqtt_client.connected())
+  {
+    if (mqtt_client.connect("taist_watthanai", CFG_MQTT_USER, CFG_MQTT_PASS))
+    {
+      Serial.println("Connected to MQTT broker");
+    }
+    else
+    {
+      Serial.print("Failed to connect to MQTT broker, rc=");
+      Serial.println(mqtt_client.state());
+      delay(2000);
+    }
   }
 
   // // evt_queue = xQueueCreate(10, sizeof(float));
 
   xTaskCreatePinnedToCore(
-      comm_task,      // task function
-      "comm_task",    // name of task
-      4096,           // stack size of task
-      nullptr,        // parameter of the task
-      2,              // priority of the task
-      nullptr,        // task handle to keep track of created task
-      0               // core to run the task on (0 or 1)
+      comm_task,   // task function
+      "comm_task", // name of task
+      4096,        // stack size of task
+      nullptr,     // parameter of the task
+      2,           // priority of the task
+      nullptr,     // task handle to keep track of created task
+      0            // core to run the task on (0 or 1)
   );
 
   xTaskCreatePinnedToCore(
@@ -104,23 +109,65 @@ void loop()
   // Empty because all tasks are handled in FreeRTOS tasks
 }
 
+// void comm_task(void *pvParameter)
+// {
+//   while (true)
+//   {
+//     float value;
+//     char payload[500];
+//     snprintf(payload, sizeof(payload), "{\"ID\": %s ,\"timestamp\":%lu,\"valve\":%.2f}",
+//              "6614552627",
+//              millis(),
+//              27.27);
+
+//     if (mqtt_client.connected())
+//     {
+//       mqtt_client.publish(MQTT_HB_TOPIC, payload);
+//     }
+
+//     vTaskDelay(1000 / portTICK_PERIOD_MS); // Delay for 1 second
+//   }
+// }
+
 void comm_task(void *pvParameter)
 {
   while (true)
   {
-    float value;
     char payload[500];
-    snprintf(payload, sizeof(payload), "{\"ID\": %s ,\"timestamp\":%lu,\"valve\":%.2f}",
+    if (strcmp(bbox_info[0], "No objects found") == 0)
+    {
+      // If it is, clear the bbox_info array
+      for (int i = 0; i < BBOX_INFO_SIZE; i++)
+      {
+        memset(bbox_info[i], 0, MAX_BBOX_INFO_LENGTH);
+      }
+    }
+
+    snprintf(payload, sizeof(payload), "{\"ID\": %s ,\"timestamp\":%lu,\"valve\": [",
              "6614552627",
-             millis(),
-             27.27);
+             millis());
+
+    // Append bounding box information to the payload
+    for (int i = 0; i < BBOX_INFO_SIZE; i++)
+    {
+      strcat(payload, "\"");
+      strcat(payload, bbox_info[i]);
+      strcat(payload, "\"");
+
+      if (i < BBOX_INFO_SIZE - 1)
+      {
+        strcat(payload, ",");
+      }
+    }
+
+    strcat(payload, "]}");
 
     if (mqtt_client.connected())
     {
       mqtt_client.publish(MQTT_HB_TOPIC, payload);
     }
 
-    vTaskDelay(1000 / portTICK_PERIOD_MS); // Delay for 1 second
+    vTaskDelay(5000 / portTICK_PERIOD_MS); // Delay for 1 second
   }
 }
 
