@@ -24,12 +24,12 @@
 // GLOBAL VARIABLES
 /////////////////////////////////////////////
 
-#define CFG_WIFI_SSID "AIS_2.4G"
-#define CFG_WIFI_PASS "nice2meetu"
+#define CFG_WIFI_SSID "xxxx"
+#define CFG_WIFI_PASS "xxxx"
 #define CFG_MQTT_SERVER "emqx.taist.online"
 #define CFG_MQTT_PORT 1883
-#define CFG_MQTT_USER "taist2024"
-#define CFG_MQTT_PASS "taist2024"
+#define CFG_MQTT_USER "xxx"
+#define CFG_MQTT_PASS "xxx"
 #define MQTT_HB_TOPIC "taist2024/aiot/heartbeat/dev_8" // public
 
 #define EI_CAMERA_RAW_FRAME_BUFFER_COLS 240
