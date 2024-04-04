@@ -29,6 +29,7 @@ app = FastAPI()
 @app.get('/api/register/{dev_id}')
 async def on_register(dev_id: str, request: Request):
     resp = {'status':'OK'}
+    
     # create database entities
     dev_db = mongo_client.dev_db
     dev_col = dev_db.devices

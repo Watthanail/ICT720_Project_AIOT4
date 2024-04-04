@@ -120,8 +120,8 @@ def handle_message(event):
             print('Register with ' + in_app_dev_id)
 
             # Fetch data from localhost API
-            api_url = "http://172.24.112.1:8000/api/list"  
-            api_data = fetch_data(api_url)
+            #api_url = "http://172.24.112.1:8000/api/list"  
+            api_data = fetch_data(dev_api_url)
             
             if api_data:
                 devices = api_data.get("devices", [])
@@ -145,7 +145,6 @@ def handle_message(event):
                                 if result.modified_count == 1:
                                     display_name = get_profile(user_id)
                                     print(f"Device ID: {in_app_dev_id} are registered with User: {display_name},User ID: {user_id} ")
-
                                     user_db = mongo_client.user_db
                                     user_col = user_db.users
                                     data = {"user_name": display_name,    
