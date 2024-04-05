@@ -1,4 +1,4 @@
-#include <car_detection_inferencing.h>
+#include <smart_refrigerator_inferencing.h>
 #include "edge-impulse-sdk/dsp/image/image.hpp"
 
 #include "main.h"
