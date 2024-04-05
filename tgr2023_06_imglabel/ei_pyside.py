@@ -234,14 +234,14 @@ class EspCamWidget(QtWidgets.QWidget):
         }
         
         bbox_label = json.dumps(bbox_data, separators=(',', ':'))
-        # headers = {'x-api-key': self.ei_api.text(),
-        #            'x-label': self.label_txt.text(),
-        #            'x-add-date-id': '1',
-        #            }
-        headers = {'x-api-key': "ei_d89401d59b380fb1df57d3427f7eff800732126fced681dd8e22a87eea3d989e",
-                   'x-label': "smart_regrigerator",
+        headers = {'x-api-key': self.ei_api.text(),
+                   'x-label': "smart_refrigerator",
                    'x-add-date-id': '1',
                    }
+        # headers = {'x-api-key': "ei_d89401d59b380fb1df57d3427f7eff800732126fced681dd8e22a87eea3d989e",
+        #            'x-label': "smart_refrigerator",
+        #            'x-add-date-id': '1',
+        #            }
         print(headers)
         payload = (('data',('tmp.jpg', self.buf, 'image/jpeg')), ('data', ('bounding_boxes.labels', bbox_label)))
         
