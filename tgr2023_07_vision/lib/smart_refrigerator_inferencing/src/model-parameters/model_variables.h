@@ -44,7 +44,7 @@ const size_t ei_dsp_blocks_size = 1;
 ei_model_dsp_t ei_dsp_blocks[ei_dsp_blocks_size] = {
     { // DSP block 4
         4,
-        27648, // output size
+        172800, // output size
         &extract_image_features, // DSP function pointer
         (void*)&ei_dsp_config_4, // pointer to config struct
         ei_dsp_config_4_axes, // array of offsets into the input stream, one for each axis
@@ -72,7 +72,7 @@ const ei_learning_block_config_tflite_graph_t ei_learning_block_config_5 = {
     .output_labels_tensor = 1,
     .output_score_tensor = 2,
     .threshold = 0.5,
-    .quantized = 0,
+    .quantized = 1,
     .compiled = 1,
     .graph_config = (void*)&ei_config_tflite_graph_5
 };
@@ -89,7 +89,7 @@ const ei_learning_block_t ei_learning_blocks[ei_learning_blocks_size] = {
         EI_CLASSIFIER_IMAGE_SCALING_NONE,
         ei_learning_block_5_inputs,
         ei_learning_block_5_inputs_size,
-        576
+        3600
     },
 };
 
@@ -110,14 +110,14 @@ const ei_impulse_t impulse_374676_0 = {
     .project_id = 374676,
     .project_owner = "Peet",
     .project_name = "smart_refrigerator",
-    .deploy_version = 4,
+    .deploy_version = 8,
 
-    .nn_input_frame_size = 27648,
-    .raw_sample_count = 9216,
+    .nn_input_frame_size = 172800,
+    .raw_sample_count = 57600,
     .raw_samples_per_frame = 1,
-    .dsp_input_frame_size = 9216 * 1,
-    .input_width = 96,
-    .input_height = 96,
+    .dsp_input_frame_size = 57600 * 1,
+    .input_width = 240,
+    .input_height = 240,
     .input_frames = 1,
     .interval_ms = 1,
     .frequency = 0,
@@ -125,9 +125,9 @@ const ei_impulse_t impulse_374676_0 = {
     .dsp_blocks = ei_dsp_blocks,
     
     .object_detection_count = 10,
-    .fomo_output_size = 12,
+    .fomo_output_size = 30,
     
-    .tflite_output_features_count = 576,
+    .tflite_output_features_count = 3600,
     .learning_blocks_size = ei_learning_blocks_size,
     .learning_blocks = ei_learning_blocks,
 
@@ -135,7 +135,7 @@ const ei_impulse_t impulse_374676_0 = {
 
     .sensor = EI_CLASSIFIER_SENSOR_CAMERA,
     .fusion_string = "image",
-    .slice_size = (9216/4),
+    .slice_size = (57600/4),
     .slices_per_model_window = 4,
 
     .has_anomaly = EI_ANOMALY_TYPE_UNKNOWN,
