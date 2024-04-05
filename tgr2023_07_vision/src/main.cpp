@@ -1,6 +1,6 @@
 #include "main.h"
 #include "hw_camera.h"
-#include <tgr2023_inferencing.h>
+#include <smart_refrigerator_inferencing.h>
 #include "edge-impulse-sdk/dsp/image/image.hpp"
 
 // constants
@@ -24,7 +24,7 @@ void ei_use_result(ei_impulse_result_t result);
 
 // initialize hardware
 void setup() {
-  Serial.begin(115200);\
+  Serial.begin(115200);
   print_memory();
   hw_camera_init();
   bmp_buf = (uint8_t*)ps_malloc(BMP_BUF_SIZE);

@@ -81,28 +81,42 @@ void hw_camera_init() {
     // adjust parameters
     sensor_t *cam_sensor = esp_camera_sensor_get();
     cam_sensor->set_framesize(cam_sensor, FRAMESIZE_240X240);
-    cam_sensor->set_brightness(cam_sensor, 1);     // -2 to 2
-    cam_sensor->set_contrast(cam_sensor, 0);       // -2 to 2
-    cam_sensor->set_saturation(cam_sensor, 0);     // -2 to 2
+    cam_sensor->set_brightness(cam_sensor, 2);     // Increase brightness (adjust as needed, from -2 to 2)
+    cam_sensor->set_contrast(cam_sensor, 0);        // Adjust contrast if necessary (-2 to 2)
+    cam_sensor->set_saturation(cam_sensor, 0);      // Adjust saturation if necessary (-2 to 2)
     cam_sensor->set_special_effect(cam_sensor, 0); // 0 to 6 (0 - No Effect, 1 - Negative, 2 - Grayscale, 3 - Red Tint, 4 - Green Tint, 5 - Blue Tint, 6 - Sepia)
-    cam_sensor->set_whitebal(cam_sensor, 0);       // 0 = disable , 1 = enable
-    cam_sensor->set_awb_gain(cam_sensor, 1);       // 0 = disable , 1 = enable
-    cam_sensor->set_wb_mode(cam_sensor, 0);        // 0 to 4 - if awb_gain enabled (0 - Auto, 1 - Sunny, 2 - Cloudy, 3 - Office, 4 - Home)
-    cam_sensor->set_exposure_ctrl(cam_sensor, 1);  // 0 = disable , 1 = enable
-    cam_sensor->set_aec2(cam_sensor, 0);           // 0 = disable , 1 = enable
-    cam_sensor->set_ae_level(cam_sensor, 0);       // -2 to 2
-    cam_sensor->set_aec_value(cam_sensor, 300);    // 0 to 1200
-    cam_sensor->set_gain_ctrl(cam_sensor, 1);      // 0 = disable , 1 = enable
-    cam_sensor->set_agc_gain(cam_sensor, 0);       // 0 to 30
-    cam_sensor->set_gainceiling(cam_sensor, (gainceiling_t)0);  // 0 to 6
-    cam_sensor->set_bpc(cam_sensor, 0);            // 0 = disable , 1 = enable
-    cam_sensor->set_wpc(cam_sensor, 1);            // 0 = disable , 1 = enable
-    cam_sensor->set_raw_gma(cam_sensor, 1);        // 0 = disable , 1 = enable
-    cam_sensor->set_lenc(cam_sensor, 1);           // 0 = disable , 1 = enable
-    cam_sensor->set_hmirror(cam_sensor, 0);        // 0 = disable , 1 = enable
-    cam_sensor->set_vflip(cam_sensor, 0);          // 0 = disable , 1 = enable
-    cam_sensor->set_dcw(cam_sensor, 1);            // 0 = disable , 1 = enable
-    cam_sensor->set_colorbar(cam_sensor, 0);       // 0 = disable , 1 = enable
+    cam_sensor->set_exposure_ctrl(cam_sensor, 1);   // Enable exposure control
+    cam_sensor->set_aec2(cam_sensor, 1);            // Enable automatic exposure correction
+    cam_sensor->set_ae_level(cam_sensor, 1);        // Adjust AE level (from -2 to 2)
+    cam_sensor->set_aec_value(cam_sensor, 1200);     // Adjust AEC value (0 to 1200, increase for brighter images)
+    cam_sensor->set_gain_ctrl(cam_sensor, 1);       // Enable automatic gain control
+    cam_sensor->set_agc_gain(cam_sensor, 30);        // Adjust AGC gain (0 to 30, increase for brighter images)
+    cam_sensor->set_gainceiling(cam_sensor, (gainceiling_t)3);  // Set gain ceiling (0 to 6)
+
+    
+    // cam_sensor->set_framesize(cam_sensor, FRAMESIZE_240X240);
+    // cam_sensor->set_brightness(cam_sensor, 1);     // -2 to 2
+    // cam_sensor->set_contrast(cam_sensor, 0);       // -2 to 2
+    // cam_sensor->set_saturation(cam_sensor, 0);     // -2 to 2
+    // cam_sensor->set_special_effect(cam_sensor, 0); // 0 to 6 (0 - No Effect, 1 - Negative, 2 - Grayscale, 3 - Red Tint, 4 - Green Tint, 5 - Blue Tint, 6 - Sepia)
+    // cam_sensor->set_whitebal(cam_sensor, 0);       // 0 = disable , 1 = enable
+    // cam_sensor->set_awb_gain(cam_sensor, 1);       // 0 = disable , 1 = enable
+    // cam_sensor->set_wb_mode(cam_sensor, 0);        // 0 to 4 - if awb_gain enabled (0 - Auto, 1 - Sunny, 2 - Cloudy, 3 - Office, 4 - Home)
+    // cam_sensor->set_exposure_ctrl(cam_sensor, 1);  // 0 = disable , 1 = enable
+    // cam_sensor->set_aec2(cam_sensor, 0);           // 0 = disable , 1 = enable
+    // cam_sensor->set_ae_level(cam_sensor, 0);       // -2 to 2
+    // cam_sensor->set_aec_value(cam_sensor, 300);    // 0 to 1200
+    // cam_sensor->set_gain_ctrl(cam_sensor, 1);      // 0 = disable , 1 = enable
+    // cam_sensor->set_agc_gain(cam_sensor, 0);       // 0 to 30
+    // cam_sensor->set_gainceiling(cam_sensor, (gainceiling_t)0);  // 0 to 6
+    // cam_sensor->set_bpc(cam_sensor, 0);            // 0 = disable , 1 = enable
+    // cam_sensor->set_wpc(cam_sensor, 1);            // 0 = disable , 1 = enable
+    // cam_sensor->set_raw_gma(cam_sensor, 1);        // 0 = disable , 1 = enable
+    // cam_sensor->set_lenc(cam_sensor, 1);           // 0 = disable , 1 = enable
+    // cam_sensor->set_hmirror(cam_sensor, 0);        // 0 = disable , 1 = enable
+    // cam_sensor->set_vflip(cam_sensor, 0);          // 0 = disable , 1 = enable
+    // cam_sensor->set_dcw(cam_sensor, 1);            // 0 = disable , 1 = enable
+    // cam_sensor->set_colorbar(cam_sensor, 0);       // 0 = disable , 1 = enable
 }
 
 // camera snapshot in JPEG format
