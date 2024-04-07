@@ -110,7 +110,7 @@ const ei_impulse_t impulse_374676_0 = {
     .project_id = 374676,
     .project_owner = "Peet",
     .project_name = "smart_refrigerator",
-    .deploy_version = 8,
+    .deploy_version = 14,
 
     .nn_input_frame_size = 172800,
     .raw_sample_count = 57600,
