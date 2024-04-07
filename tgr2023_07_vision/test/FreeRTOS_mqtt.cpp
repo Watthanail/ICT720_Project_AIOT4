@@ -13,13 +13,13 @@
 
 #define MQTT_BROKER       "broker.hivemq.com"
 #define MQTT_PORT         1883
-#define HIVEMQ_USERNAME   "taist_aiot_???"
-#define MQTT_SOUND_TOPIC  "taist/aiot/sound/dev_???"
-#define MQTT_HB_TOPIC     "taist/aiot/heartbeat/dev_???"
-#define MQTT_CMD_TOPIC    "taist/aiot/command/dev_???"
+#define HIVEMQ_USERNAME   "taist_aiot_05"
+#define MQTT_SOUND_TOPIC  "taist/aiot/sound/dev_05"
+#define MQTT_HB_TOPIC     "taist/aiot/heartbeat/dev_05"
+#define MQTT_CMD_TOPIC    "taist/aiot/command/dev_05"
 
-#define WIFI_SSID         "Your SSID"
-#define WIFI_PASSWORD     "Your Password"
+#define WIFI_SSID         "Peet"
+#define WIFI_PASSWORD     "peet3210"
 
 // global variables
 WiFiClient wifi_client;
@@ -117,18 +117,23 @@ void comm_task(void *pvParameter) {
     // 3. do threshold and edge detection
     if (avg_value > 0.5) { 
       detected = true;
-
+      if (millis() - prev_ms > 2000) {
+        prev_ms = millis();
+        if (mqtt_client.connected()) {
+          mqtt_client.publish(MQTT_HB_TOPIC, "detected");
+        }
+      }
     } else {
       detected = false;
-
-    }
+      if (millis() - prev_ms > 2000) {
+        prev_ms = millis();
+        if (mqtt_client.connected()) {
+          mqtt_client.publish(MQTT_HB_TOPIC, "not detected");
+        }
+      }
     // communicate with MQTT
     //Serial.printf("%d, %f, %d\n", millis(), value, detected);
-    if (millis() - prev_ms > 2000) {
-      prev_ms = millis();
-      if (mqtt_client.connected()) {
-        mqtt_client.publish(MQTT_HB_TOPIC, "1");
-      }
+
     }
   }
 }

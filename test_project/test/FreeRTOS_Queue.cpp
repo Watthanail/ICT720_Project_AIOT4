@@ -62,7 +62,7 @@ void consumer_task(void *pvParameters) {
     Serial.println(received_data);
 
     vTaskDelay(pdMS_TO_TICKS(2200));
-    // this will be shown as the time tick for sending more than recieve so after the item reached the limit of queue.
+    // this will be shown as the time tick for sending more than recieving so that the nuumber of item reached the limit of queue.
     //Blocking behavior (portMAX_DELAY used): If the queue is full and the producer task attempts to send data using xQueueSend() with portMAX_DELAY as the block time, the producer task will block (i.e., wait) until space becomes available in the queue. This means the producer task will pause execution until there is room in the queue to send the data. This could potentially delay other tasks in the system if they are dependent on the producer task.
 
     //Non-blocking behavior (zero block time): If the queue is full and the producer task attempts to send data using xQueueSend() with a block time of zero, the function will return immediately with an error code (usually errQUEUE_FULL). This allows the producer task to handle the situation accordingly, such as retrying after some time or implementing a different strategy.
