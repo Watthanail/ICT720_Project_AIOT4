@@ -29,7 +29,7 @@
 #include "edge-impulse-sdk/classifier/ei_model_types.h"
 #include "edge-impulse-sdk/classifier/inferencing_engines/engines.h"
 
-const char* ei_classifier_inferencing_categories[] = { "head", "middle", "tail" };
+const char* ei_classifier_inferencing_categories[] = { "m150", "nescafe", "splash" };
 
 uint8_t ei_dsp_config_4_axes[] = { 0 };
 const uint32_t ei_dsp_config_4_axes_size = 1;
@@ -106,11 +106,11 @@ const ei_object_detection_nms_config_t ei_object_detection_nms = {
     0.2f  /* NMS IOU threshold */
 };
 
-const ei_impulse_t impulse_372171_0 = {
-    .project_id = 372171,
+const ei_impulse_t impulse_376729_0 = {
+    .project_id = 376729,
     .project_owner = "Lazy_person",
-    .project_name = "Workshop01",
-    .deploy_version = 1,
+    .project_name = "refrigerator",
+    .deploy_version = 2,
 
     .nn_input_frame_size = 49152,
     .raw_sample_count = 16384,
@@ -145,7 +145,7 @@ const ei_impulse_t impulse_372171_0 = {
     .object_detection_nms = ei_object_detection_nms
 };
 
-ei_impulse_handle_t impulse_handle_372171_0 = ei_impulse_handle_t( &impulse_372171_0 );
-ei_impulse_handle_t& ei_default_impulse = impulse_handle_372171_0;
+ei_impulse_handle_t impulse_handle_376729_0 = ei_impulse_handle_t( &impulse_376729_0 );
+ei_impulse_handle_t& ei_default_impulse = impulse_handle_376729_0;
 
 #endif // _EI_CLASSIFIER_MODEL_METADATA_H_

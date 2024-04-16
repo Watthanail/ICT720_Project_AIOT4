@@ -4,8 +4,8 @@
 
 #define TAG "main"
 
-#define BUTTON_PIN 21
-#define LED_PIN 45
+#define BUTTON_PIN 45
+#define LED_PIN 21
 
 #include <Arduino.h>
 #include <Task.h>
@@ -13,8 +13,15 @@
 
 // Edge Impulse
 #include "hw_camera.h"
-#include <Workshop01_inferencing.h>
+#include <refrigerator_inferencing.h>
 #include "edge-impulse-sdk/dsp/image/image.hpp"
+
+// WIFI
+#include <WiFi.h>
+#include <WiFiClient.h>
+
+// MQTT
+#include <PubSubClient.h>
 
 void Triggle(void *pvParameter);
 
@@ -24,6 +31,15 @@ uint32_t lastDebounceTime = 0;
 uint16_t Debouncetime = 50;
 uint32_t buttonPressStartTime = 0;
 uint32_t camStartTime = 0;
+
+#define CFG_WIFI_SSID "AIS_2.4G"
+#define CFG_WIFI_PASS "nice2meetu"
+#define CFG_MQTT_SERVER "emqx.taist.online"
+#define CFG_MQTT_PORT 1883
+#define CFG_MQTT_USER "taist2024"
+#define CFG_MQTT_PASS "taist2024"
+#define MQTT_HB_TOPIC "taist2024/refrigerator/heartbeat" // public_heartbeat
+#define MQTT_Data_TOPIC "taist2024/refrigerator/data"
 
 #define EI_CAMERA_RAW_FRAME_BUFFER_COLS 240
 #define EI_CAMERA_RAW_FRAME_BUFFER_ROWS 240
@@ -36,41 +52,85 @@ static uint8_t *bmp_buf;
 uint32_t width = 240;
 uint32_t height = 240;
 bool camState;
+
+WiFiClient wifi_client;
+PubSubClient mqtt_client(wifi_client);
 char bbox_info[BBOX_INFO_SIZE][MAX_BBOX_INFO_LENGTH];
 TaskHandle_t camTaskHandle = NULL; // Task handle variable
+
+QueueHandle_t detect_queue;
 
 // Function prototypes
 void ei_prepare_feature(uint8_t *img_buf, signal_t *signal);
 int ei_get_feature_callback(size_t offset, size_t length, float *out_ptr);
 void ei_use_result(ei_impulse_result_t result);
 
+void comm_task(void *pvParameter);
 void cam_detect_task(void *pvParameter);
 void Triggle(void *pvParameter);
-void setup()
-{
-  Serial.begin(115200);
-  xTaskCreatePinnedToCore(
-      Triggle,
-      "switchTrig",
-      4096,
-      nullptr,
-      3,
-      nullptr,
-      0);
 
-  xTaskCreatePinnedToCore(
-      cam_detect_task,   // task function
-      "cam_detect_task", // name of task
-      8192,              // stack size of task
-      nullptr,           // parameter of the task
-      2,                 // priority of the task
-      &camTaskHandle,    // task handle to keep track of created task
-      0                  // core to run the task on (0 or 1)
-  );
-}
-
-void loop()
+void comm_task(void *pvParameter)
 {
+  Serial.println("Comm Task initialized.");
+  char buf[MAX_BBOX_INFO_LENGTH]; // Buffer to hold received data
+  while (true)
+  {
+    char payload[500];
+    // snprintf(payload, sizeof(payload), "{\"status\": \"online\"}");
+    // if (mqtt_client.connected())
+    // {
+    //   bool publishSuccess = mqtt_client.publish(MQTT_HB_TOPIC, payload);
+    //   if (publishSuccess)
+    //   {
+    //     Serial.println("Heartbeat message sent successfully.");
+    //   }
+    //   else
+    //   {
+    //     Serial.println("Failed to send heartbeat message.");
+    //   }
+    // }
+    if (xQueueReceive(detect_queue, buf, portMAX_DELAY) == pdTRUE && camState == LOW)
+    {
+      if (strcmp(bbox_info[0], "No objects found") == 0)
+      {
+        // If it is, clear the bbox_info array
+        for (int i = 0; i < BBOX_INFO_SIZE; i++)
+        {
+          memset(bbox_info[i], 0, MAX_BBOX_INFO_LENGTH);
+        }
+      }
+
+      snprintf(payload, sizeof(payload), "{\"device_addr\": \"WW:DD:CC:SS\" ,\"value\": [");
+
+      // Append bounding box information to the payload
+      for (int i = 0; i < BBOX_INFO_SIZE; i++)
+      {
+        strcat(payload, "\"");
+        strcat(payload, bbox_info[i]);
+        strcat(payload, "\"");
+
+        if (i < BBOX_INFO_SIZE - 1)
+        {
+          strcat(payload, ",");
+        }
+      }
+
+      strcat(payload, "]}");
+      Serial.println(payload);
+
+      if (mqtt_client.connected())
+      {
+        mqtt_client.publish(MQTT_Data_TOPIC, payload);
+      }
+    }
+    else
+    {
+      Serial.println("No data received in comm_task.");
+    }
+
+    // Delay for 2 seconds
+    vTaskDelay(2000 / portTICK_PERIOD_MS);
+  }
 }
 
 void Triggle(void *pvParameter)
@@ -98,11 +158,16 @@ void Triggle(void *pvParameter)
           // if ((millis() - camStartTime >= 10000))
           // {
           digitalWrite(LED_PIN, HIGH); // Turn on LED
+
           vTaskResume(camTaskHandle);
           if ((millis() - camStartTime) >= 10000)
           {
             camState = HIGH; // Set camState to HIGH after 10 seconds
           }
+          // for (int i = 0; i < BBOX_INFO_SIZE; i++)
+          // {
+          //   memset(bbox_info[i], 0, MAX_BBOX_INFO_LENGTH);
+          // }
         }
 
         else
@@ -153,20 +218,19 @@ void cam_detect_task(void *pvParameter)
       }
       snprintf(bbox_info[ix], MAX_BBOX_INFO_LENGTH, "%s (%f) [ x: %u, y: %u, width: %u, height: %u ]",
                bb.label, bb.value, bb.x, bb.y, bb.width, bb.height);
-      Serial.println(bbox_info[ix]);
+      xQueueSend(detect_queue, &bbox_info[ix], portMAX_DELAY);
+      // Serial.println(bbox_info[ix]);
     }
 
     if (!bb_found)
     {
       snprintf(bbox_info[0], MAX_BBOX_INFO_LENGTH, "No objects found");
-      Serial.println("No objects found");
+      xQueueSend(detect_queue, &bbox_info[0], portMAX_DELAY);
+      // Serial.println("No objects found");
     }
 
-
     vTaskDelay(1000 / portTICK_PERIOD_MS); // Delay for 2 seconds
-
-    vTaskSuspend(NULL); // Suspend this task after processing
-
+    vTaskSuspend(NULL);                    // Suspend this task after processing
   }
 }
 
@@ -225,14 +289,93 @@ void ei_use_result(ei_impulse_result_t result)
     snprintf(bbox_info[ix], MAX_BBOX_INFO_LENGTH, "%s (%f) [ x: %u, y: %u, width: %u, height: %u ]",
              bb.label, bb.value, bb.x, bb.y, bb.width, bb.height);
 
-    Serial.println(bbox_info[ix]); // Print the bounding box info
+    // Serial.println(bbox_info[ix]); // Print the bounding box info
+    xQueueSend(detect_queue, &bbox_info[ix], portMAX_DELAY);
   }
 
   if (!bb_found)
   {
-    Serial.println("No objects found");
+    // Serial.println("No objects found");
 
     // Provide default information if no objects found
     snprintf(bbox_info[0], MAX_BBOX_INFO_LENGTH, "No objects found");
+    xQueueSend(detect_queue, &bbox_info[0], portMAX_DELAY);
   }
+}
+
+void setup()
+{
+
+  Serial.begin(115200);
+
+  WiFi.begin(CFG_WIFI_SSID, CFG_WIFI_PASS);
+  while (WiFi.status() != WL_CONNECTED)
+  {
+    delay(1000);
+    Serial.println("Connecting to WiFi...");
+  }
+  mqtt_client.setServer(CFG_MQTT_SERVER, CFG_MQTT_PORT);
+  while (!mqtt_client.connected())
+  {
+    if (mqtt_client.connect("taist_watthanai", CFG_MQTT_USER, CFG_MQTT_PASS))
+    {
+      Serial.println("Connected to MQTT broker");
+    }
+    else
+    {
+      Serial.print("Failed to connect to MQTT broker, rc=");
+      Serial.println(mqtt_client.state());
+      delay(2000);
+    }
+  }
+  detect_queue = xQueueCreate(BBOX_INFO_SIZE, sizeof(bbox_info[0]));
+  if (detect_queue == NULL)
+  {
+    Serial.println("Failed to crate queue!");
+  }
+
+  xTaskCreatePinnedToCore(
+      Triggle,
+      "switchTrig",
+      4096,
+      nullptr,
+      1,
+      nullptr,
+      0);
+
+  xTaskCreatePinnedToCore(
+      cam_detect_task,   // task function
+      "cam_detect_task", // name of task
+      8192,              // stack size of task
+      nullptr,           // parameter of the task
+      1,                 // priority of the task
+      &camTaskHandle,    // task handle to keep track of created task
+      0                  // core to run the task on (0 or 1)
+  );
+
+  xTaskCreatePinnedToCore(
+      comm_task,   // task function
+      "comm_task", // name of task
+      4096,        // stack size of task
+      nullptr,     // parameter of the task
+      2,           // priority of the task
+      nullptr,     // task handle to keep track of created task
+      0            // core to run the task on (0 or 1)
+  );
+}
+
+void loop()
+{
+  // execute MQTT loop
+  char payload[500];
+  snprintf(payload, sizeof(payload), "{\"device_addr\": \"WW:DD:CC:SS\",\"status\": \"online\"}");
+  if (mqtt_client.connected())
+  {
+    mqtt_client.loop();
+    if (camState == LOW){
+          mqtt_client.publish(MQTT_HB_TOPIC, payload);
+    }
+
+  }
+  delay(10000);
 }
