@@ -335,13 +335,13 @@ void setup()
   }
 
   xTaskCreatePinnedToCore(
-      Triggle,
-      "switchTrig",
-      4096,
-      nullptr,
-      1,
-      nullptr,
-      0);
+      Triggle,          // task function
+      "switchTrig",     // name of task
+      4096,             // stack size of task
+      nullptr,          // parameter of the task
+      1,                // priority of the task
+      nullptr,          // task handle to keep track of created task
+      0);               // core to run the task on (0 or 1)
 
   xTaskCreatePinnedToCore(
       cam_detect_task,   // task function
@@ -358,9 +358,9 @@ void setup()
       "comm_task", // name of task
       4096,        // stack size of task
       nullptr,     // parameter of the task
-      2,           // priority of the task
+      1,           // priority of the task
       nullptr,     // task handle to keep track of created task
-      0            // core to run the task on (0 or 1)
+      1            // core to run the task on (0 or 1)
   );
 }
 
@@ -372,10 +372,14 @@ void loop()
   if (mqtt_client.connected())
   {
     mqtt_client.loop();
-    if (camState == LOW){
-          mqtt_client.publish(MQTT_HB_TOPIC, payload);
+    if (camState == LOW || (camState == HIGH && digitalRead(BUTTON_PIN) == HIGH))
+    {
+      mqtt_client.publish(MQTT_HB_TOPIC, payload);
     }
-
+    for (int i = 0; i < BBOX_INFO_SIZE; i++)
+    {
+      memset(bbox_info[i], 0, MAX_BBOX_INFO_LENGTH);
+    }
   }
   delay(10000);
 }
