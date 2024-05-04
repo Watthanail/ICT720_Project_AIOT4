@@ -43,11 +43,12 @@ https://medium.com/@watthanai2540/taist2024-smart-refrigerator-lab-a1aee4804ed5
       <ul>
         <li><a href="#MQTT-broker">MQTT broker</a></li>
         <li><a href="#Data-pipeline">Data pipeline</a></li>
+        <li><a href="#Database">Database</a></li>
         <li><a href="#Dashboard">Dashboard</a></li>
       </ul>
     </li>
     <li>
-      <a href="#Data-pipeline-<Node-Red>">Getting Started</a>
+      <a href="#Data-pipeline-on-Node-Red">Data pipeline on Node-Red</a>
       <ul>
         <li><a href="#Calculate-Data">Calculate Data</a></li>
         <li><a href="#Line-bot-application">Line bot application</a></li>
@@ -165,23 +166,205 @@ https://medium.com/@watthanai2540/taist2024-smart-refrigerator-lab-a1aee4804ed5
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 ## Workstation Docker container
+<p align= "left">For running applications across various workstations in different environments, we utilize the Docker platform to manage operations for each new edit and redeployment. Typically, Docker Desktop aids in this management process. However, in this article, the computer resources owned is not enough to process. Therefore, the alternative is renting a VPS ( virtual private server) to run Ubuntu . The process begins with installing Docker using a scrip file. </p>
+
+ <a href="https://docs.docker.com/engine/install/ubuntu/#install-using-the-convenience-script">Ref : Docker engine install ubuntu</a>
+
+
+<div align="center">
+     <img src="image/Workstation_Docker/Docker01.png" width="450" height="250">
+</div>
+
+ <p align= "left">After installing Docker, we will install portainer to manage container services and network. 
+  <a href="https://docs.portainer.io/start/install/server/swarm/linux">Ref : Install portainer</a> </p>
+
+ <p align= "left">you can use GUI in setup docker yaml in stacks or docker command is
+docker compose -f {{filename}}.yaml up — build -d</p>
+
+-----------------------------------
 
 ### MQTT broker
 
 
+   ```sh 
+version: "3.7"
+services:
+  emqx:
+    image: emqx/emqx
+    container_name: emqx
+    ports:
+    - "18083:18083" # dashboard
+    - "1883:1883" # mqtt
+    - "8883:8883" # mqtts
+    - "8081:8081" # dashboard api
+    - "8083:8083" # ws
+    - "8084:8084" # wss
+    volumes:
+    - /TAIST2024/emqx/data:/opt/emqx/data/mnesia
+    environment:
+    - TZ=Asia/Bangkok
+  ```
+  <div align="center">
+     <img src="image/Workstation_Docker/emqx01.PNG" width="200" height="200">
+    <img src="image/Workstation_Docker/emqx02.PNG" width="300" height="200">
+</div>
 
 -------------------
 
 ### Data pipeline
+   ```sh 
+version: "3.7"
+services:
+  node-red:
+    image: nodered/node-red
+    ports:
+    - 1880:1880
+    volumes:
+    - /TAIST2024/node-red/data:/data
+    environment:
+    - TZ=Asia/Bangkok
+  ```
+
+<div align="center">
+     <img src="image/Workstation_Docker/node-red01.PNG" width="450" height="250">
+</div>
 
 ------------------
 
-
 ### Databases
+
+   ```sh 
+version: "3.7"
+services:
+  mysql:
+    image: mysql:8
+    container_name: mysql
+    ports:
+    - 3306:3306
+    volumes:
+    - /TAIST2024/mysql/data:/var/lib/mysql
+    - /TAIST2024/mysql/etc:/etc/mysql/conf.d
+    environment:
+    - TZ=Asia/Bangkok
+    - MYSQL_ROOT_PASSWORD=xxxxxxxxx
+  ```
+
+  
+<div align="center">
+     <img src="image/Workstation_Docker/mysql01.PNG" width="450" height="250">
+</div>
 
 -----------
 
-
 ### Dashboard
 
-----------
+   ```sh 
+version: "3.7"
+services:
+  grafana:
+    image: grafana/grafana
+    container_name : grafana
+    ports:
+    - 3000:3000
+    volumes:
+    - /TAIST2024/grafana/data:/var/lib/grafana
+    - /TAIST2024/grafana/plugins:/var/lib/grafana/plugins
+    environment:
+    - TZ=Asia/Bangkok
+  ```
+
+<div align="center">
+     <img src="image/Workstation_Docker/grafana01.PNG" width="450" height="250">
+</div>
+
+<p align="right">(<a href="#top">back to top</a>)</p>
+
+## Data pipeline on Node-Red
+
+### Calculate Data
+<div align="center">
+     <img src="image/Data_pipline/Calculate_Data/node-red_FlowCal01.PNG" width="450" height="250">
+</div>
+
+------------------
+
+### Line bot application
+
+<p align="right">(<a href="#top">back to top</a>)</p>
+
+
+
+## Fastapi-&-index.html
+<p align= "left">xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</p>
+<div align="center">
+     <img src="image/fastapi_index/Fastapi01.PNG" width="350" height="350">
+</div>
+
+ <p align= "left">method @get xxxxxxxxxxxxxxxxxxxxx </p>
+
+   ```sh 
+@app.get("/devices", response_model=List[DeviceRegistration])
+def get_devices():
+    # Commit any pending transactions to ensure data consistency
+    mydb.commit()
+    # Fetch devices from MySQL
+    mycursor.execute("SELECT * FROM dev_registor_db")
+    devices = mycursor.fetchall()
+    device_list = []
+    for device in devices:
+        device_obj = DeviceRegistration(
+            device_name=device[0],
+            device_addr=device[1],
+            branch_name=device[2],
+            status=device[3],
+            created_time=device[4],
+            update_time=device[5],
+            Latitude=device[6],
+            Longtitude=device[7],
+            status_registor=device[8],
+            create_registor=device[9]
+        )
+        device_list.append(device_obj)
+    return device_list
+  ```
+
+ -----------------------------------
+
+ <p align= "left">method @post xxxxxxxxxxxxxxxxxxxxx </p>
+
+  ```sh 
+
+  xxxxx
+
+  ```
+
+  -----------------------------------
+
+ <p align= "left">method @Delete xxxxxxxxxxxxxxxxxxxxx </p>
+
+   ```sh 
+
+  xxxxx
+
+  ```
+
+   -----------------------------------
+
+ <p align= "left">QR coede.html </p>
+ 
+<div align="center">
+     <img src="image/fastapi_index/index_Qrcode.png" width="200" height="300">
+</div>
+
+
+   ```sh 
+
+  xxxxx
+
+  ```
+
+<p align="right">(<a href="#top">back to top</a>)</p>
+
+## Config Dashboard
+
+<p align="right">(<a href="#top">back to top</a>)</p>
