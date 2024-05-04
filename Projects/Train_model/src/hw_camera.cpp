@@ -57,21 +57,13 @@ void hw_camera_init() {
     // configure jpeg settings
     if (psramFound()) {
         camera_config.frame_size = FRAMESIZE_240X240;
-<<<<<<< Updated upstream
-        camera_config.jpeg_quality = 1;
-=======
         camera_config.jpeg_quality = 10;
->>>>>>> Stashed changes
         camera_config.fb_count = 2;
         camera_config.fb_location = CAMERA_FB_IN_PSRAM;
         ESP_LOGI(TAG, "PSRAM found, using %d frames", camera_config.fb_count);
     } else {
         camera_config.frame_size = FRAMESIZE_240X240;
-<<<<<<< Updated upstream
-        camera_config.jpeg_quality = 1;
-=======
         camera_config.jpeg_quality = 12;
->>>>>>> Stashed changes
         camera_config.fb_count = 1;
         camera_config.fb_location = CAMERA_FB_IN_DRAM;
         ESP_LOGI(TAG, "PSRAM not found, using %d frames", camera_config.fb_count);
@@ -89,18 +81,6 @@ void hw_camera_init() {
     // adjust parameters
     sensor_t *cam_sensor = esp_camera_sensor_get();
     cam_sensor->set_framesize(cam_sensor, FRAMESIZE_240X240);
-<<<<<<< Updated upstream
-    // cam_sensor->set_framesize(cam_sensor, FRAMESIZE_QVGA);
-    cam_sensor->set_brightness(cam_sensor, 2);     // -2 to 2
-    cam_sensor->set_contrast(cam_sensor, 2);       // -2 to 2
-    cam_sensor->set_saturation(cam_sensor, -2);     // -2 to 2
-    cam_sensor->set_special_effect(cam_sensor, 0); // 0 to 6 (0 - No Effect, 1 - Negative, 2 - Grayscale, 3 - Red Tint, 4 - Green Tint, 5 - Blue Tint, 6 - Sepia)
-    cam_sensor->set_whitebal(cam_sensor, 1);       // 0 = disable , 1 = enable
-    cam_sensor->set_awb_gain(cam_sensor, 1);       // 0 = disable , 1 = enable
-    cam_sensor->set_wb_mode(cam_sensor, 0);        // 0 to 4 - if awb_gain enabled (0 - Auto, 1 - Sunny, 2 - Cloudy, 3 - Office, 4 - Home)
-    cam_sensor->set_exposure_ctrl(cam_sensor, 1);  // 0 = disable , 1 = enable
-    cam_sensor->set_aec2(cam_sensor, 1);           // 0 = disable , 1 = enable
-=======
     cam_sensor->set_brightness(cam_sensor, 1);     // -2 to 2
     cam_sensor->set_contrast(cam_sensor, 0);       // -2 to 2
     cam_sensor->set_saturation(cam_sensor, 0);     // -2 to 2
@@ -110,7 +90,6 @@ void hw_camera_init() {
     cam_sensor->set_wb_mode(cam_sensor, 0);        // 0 to 4 - if awb_gain enabled (0 - Auto, 1 - Sunny, 2 - Cloudy, 3 - Office, 4 - Home)
     cam_sensor->set_exposure_ctrl(cam_sensor, 1);  // 0 = disable , 1 = enable
     cam_sensor->set_aec2(cam_sensor, 0);           // 0 = disable , 1 = enable
->>>>>>> Stashed changes
     cam_sensor->set_ae_level(cam_sensor, 0);       // -2 to 2
     cam_sensor->set_aec_value(cam_sensor, 300);    // 0 to 1200
     cam_sensor->set_gain_ctrl(cam_sensor, 1);      // 0 = disable , 1 = enable
