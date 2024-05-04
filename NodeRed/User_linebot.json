@@ -1,0 +1,808 @@
+[
+    {
+        "id": "62a81c1bb16e67ec",
+        "type": "tab",
+        "label": "User_Linebot_API",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "89493719f78fb5ef",
+        "type": "group",
+        "z": "62a81c1bb16e67ec",
+        "name": "Check Condtion LineBot",
+        "style": {
+            "fill": "#bfdbef",
+            "label": true,
+            "color": "#3f3f3f"
+        },
+        "nodes": [
+            "a15b58d30113c977",
+            "3f564c891264e192",
+            "10b96f3c3558070c",
+            "01f25ff9b046c9ea",
+            "c1a62a9fdeb70434",
+            "b55fee5e9fa02d3f",
+            "cd51c2c6c87897a7"
+        ],
+        "x": 74,
+        "y": 39,
+        "w": 722,
+        "h": 222
+    },
+    {
+        "id": "3dec8cf5a0369436",
+        "type": "group",
+        "z": "62a81c1bb16e67ec",
+        "name": "Payload Initial",
+        "style": {
+            "stroke": "#a4a4a4",
+            "label": true,
+            "color": "#3f3f3f",
+            "fill": "#ffffff"
+        },
+        "nodes": [
+            "fd7efa94c94ab0e5",
+            "47ef184687747571",
+            "386991878262aa7b"
+        ],
+        "x": 64,
+        "y": 279,
+        "w": 492,
+        "h": 82
+    },
+    {
+        "id": "3533ebcbce4d9df9",
+        "type": "group",
+        "z": "62a81c1bb16e67ec",
+        "name": "User Registor",
+        "style": {
+            "label": true,
+            "color": "#3f3f3f",
+            "fill": "#ffffff"
+        },
+        "nodes": [
+            "aa8e5d24392ac221",
+            "3b082f217a9c520e",
+            "82bae61b6cca2af1",
+            "f1a7bae76fa6678f",
+            "bf691aacadf90493",
+            "2e7cbcc4781c44e8",
+            "45730dd777ab2d4b",
+            "b4b05439dd2fd783"
+        ],
+        "x": 64,
+        "y": 379,
+        "w": 842,
+        "h": 202
+    },
+    {
+        "id": "0ec773523470908c",
+        "type": "group",
+        "z": "62a81c1bb16e67ec",
+        "name": "Check Device Registor",
+        "style": {
+            "label": true,
+            "color": "#3f3f3f",
+            "fill": "#ffffff"
+        },
+        "nodes": [
+            "2b0bb398edaed551",
+            "ad33a2d291a80563",
+            "9f43c677f379cd07",
+            "806fc8255f600a68",
+            "88aa6c93c84de6ac",
+            "842ccca0c4e1c791",
+            "1b0802aa7c1f2bf2"
+        ],
+        "x": 74,
+        "y": 599,
+        "w": 842,
+        "h": 162
+    },
+    {
+        "id": "06462ab2e4e2a0cf",
+        "type": "group",
+        "z": "62a81c1bb16e67ec",
+        "name": "Delete Device",
+        "style": {
+            "label": true,
+            "color": "#3f3f3f"
+        },
+        "nodes": [
+            "7f4742b5e4314bd9",
+            "fa61af2f5a8edc74",
+            "da3541672a81c8c6",
+            "fec812cf67ad33a3",
+            "cfc08b5fd8d8bb45",
+            "abeb3cb8eae72be8"
+        ],
+        "x": 74,
+        "y": 799,
+        "w": 832,
+        "h": 142
+    },
+    {
+        "id": "28709120292710b3",
+        "type": "group",
+        "z": "62a81c1bb16e67ec",
+        "name": "Webhook line bot /API",
+        "style": {
+            "fill": "#bfbfbf",
+            "label": true,
+            "color": "#3f3f3f"
+        },
+        "nodes": [
+            "5c938d77e25e7b04",
+            "41759efcb5ded38e",
+            "becbb503c328d1fc"
+        ],
+        "x": 824,
+        "y": 39,
+        "w": 562,
+        "h": 82
+    },
+    {
+        "id": "5c938d77e25e7b04",
+        "type": "http request",
+        "z": "62a81c1bb16e67ec",
+        "g": "28709120292710b3",
+        "name": "",
+        "method": "POST",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "https://api.line.me/v2/bot/message/push",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 1010,
+        "y": 80,
+        "wires": [
+            [
+                "41759efcb5ded38e"
+            ]
+        ]
+    },
+    {
+        "id": "41759efcb5ded38e",
+        "type": "debug",
+        "z": "62a81c1bb16e67ec",
+        "g": "28709120292710b3",
+        "name": "debug 5",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1280,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "a15b58d30113c977",
+        "type": "function",
+        "z": "62a81c1bb16e67ec",
+        "g": "89493719f78fb5ef",
+        "name": "Initial Line bot",
+        "func": "var receive_msg = msg.payload;\nvar topic = receive_msg.events[0].message.text\n\n\nvar reply1, reply2\nif (receive_msg.events[0].type == \"message\" && receive_msg.events[0].message.type == \"text\") {\n    var list = topic.split('-');\n    msg.type = list[0];\n    if (msg.type == \"#reg\") {\n        msg.topic = \"SELECT * FROM dev_registor_db WHERE device_addr ='\"+ list[1] +\"'\";\n\n    }\n    else if (msg.type == \"#check\") {\n        msg.topic = \"SELECT * FROM user_registor_db WHERE user_name ='\" + list[1] + \"'\";\n\n    }\n    else if (msg.type == \"#del\") {\n        msg.topic1 = \"DELETE FROM user_registor_db WHERE device_addr ='\" + list[1] + \"'\";\n        msg.topic2 = \"UPDATE dev_registor_db SET status_registor = NULL, create_registor = NULL, user_registor = null WHERE device_addr ='\" + list[1] + \"'\";\n\n    }\n    else {\n        msg.type = \"initial\"\n        msg.payload = {\n            reply1: {\n                type: 'text',\n                text: \"📋 Information \\n 💾 Registor: \\\"#reg-{mac}-{user}\\\" \\n 📦 Devices: \\\"#check-{user}\\\" \\n ⛔️ Delete : \\\" #del-{mac} \\\"  \\n  👨‍💻 Dashboard : \\\" http://grafana.taist.online:3000/d/bdjexb67vvgg0b/taist2024?orgId=1&refresh=10s&from=1714792790920&to=1714814390920 \\\"  \\n 🙏 Thank you\"\n            },\n\n            reply2: {\n                type: \"sticker\",\n                packageId: 2,\n                stickerId: 34\n            }\n        }\n\n\n        \n    }\n\n\n}\nelse {\n    msg.type = \"initial\"\n    msg.payload = {\n        reply1: {\n            type: 'text',\n            text: \"📋 Information \\n 💾 Registor: \\\"#reg-{mac}-{user}\\\" \\n 📦 Devices: \\\"#check-{user}\\\" \\n ⛔️ Delete : \\\" #del-{mac} \\\"  \\n  👨‍💻 Dashboard : \\\"http://grafana.taist.online:3000/d/bdjexb67vvgg0b/taist2024?orgId=1&refresh=10s&from=1714792790920&to=1714814390920 \\\"  \\n 🙏 Thank you\"\n        },\n\n        reply2: {\n            type: \"sticker\",\n            packageId: 2,\n            stickerId: 34\n        }\n    }\n}\n\n\n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 380,
+        "y": 140,
+        "wires": [
+            [
+                "10b96f3c3558070c"
+            ]
+        ]
+    },
+    {
+        "id": "3f564c891264e192",
+        "type": "http in",
+        "z": "62a81c1bb16e67ec",
+        "g": "89493719f78fb5ef",
+        "name": "",
+        "url": "/callback",
+        "method": "post",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 180,
+        "y": 140,
+        "wires": [
+            [
+                "a15b58d30113c977"
+            ]
+        ]
+    },
+    {
+        "id": "aa8e5d24392ac221",
+        "type": "mysql",
+        "z": "62a81c1bb16e67ec",
+        "g": "3533ebcbce4d9df9",
+        "mydb": "de1da5a892df413f",
+        "name": "taistnode",
+        "x": 260,
+        "y": 420,
+        "wires": [
+            [
+                "3b082f217a9c520e",
+                "82bae61b6cca2af1"
+            ]
+        ]
+    },
+    {
+        "id": "10b96f3c3558070c",
+        "type": "switch",
+        "z": "62a81c1bb16e67ec",
+        "g": "89493719f78fb5ef",
+        "name": "",
+        "property": "type",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "initial",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "#reg",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "#check",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "#del",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 4,
+        "x": 550,
+        "y": 140,
+        "wires": [
+            [
+                "b55fee5e9fa02d3f"
+            ],
+            [
+                "01f25ff9b046c9ea"
+            ],
+            [
+                "c1a62a9fdeb70434"
+            ],
+            [
+                "cd51c2c6c87897a7"
+            ]
+        ]
+    },
+    {
+        "id": "3b082f217a9c520e",
+        "type": "function",
+        "z": "62a81c1bb16e67ec",
+        "g": "3533ebcbce4d9df9",
+        "name": "INSERT user db",
+        "func": "var device_addr = msg.payload[0].device_addr\nvar value = msg.req.body.events[0].message.text\nvar list = value.split('-');\nvar topic = msg.payload[0].branch_name\nvar Latitude = msg.payload[0].Latitude\nvar Longtitude = msg.payload[0].Longtitude\n\nmsg.topic = \"INSERT INTO user_registor_db (device_addr, user_name, topic, Latitude, Longtitude) VALUES ('\" + device_addr + \"','\" + list[2] + \"','\" + topic + \"',\" + Latitude + \", \" + Longtitude + \")\"\n\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 260,
+        "y": 480,
+        "wires": [
+            [
+                "f1a7bae76fa6678f"
+            ]
+        ]
+    },
+    {
+        "id": "82bae61b6cca2af1",
+        "type": "function",
+        "z": "62a81c1bb16e67ec",
+        "g": "3533ebcbce4d9df9",
+        "name": "UPDATE dev db",
+        "func": "var device_addr = msg.payload[0].device_addr\nvar value = msg.req.body.events[0].message.text\nvar list = value.split('-');\n\nmsg.topic = \"UPDATE dev_registor_db SET status_registor = 'success', create_registor = NOW() ,user_registor = '\" + list[2] + \"' WHERE device_addr = '\" + device_addr + \"'\"\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 260,
+        "y": 540,
+        "wires": [
+            [
+                "f1a7bae76fa6678f"
+            ]
+        ]
+    },
+    {
+        "id": "f1a7bae76fa6678f",
+        "type": "mysql",
+        "z": "62a81c1bb16e67ec",
+        "g": "3533ebcbce4d9df9",
+        "mydb": "de1da5a892df413f",
+        "name": "taistnode",
+        "x": 440,
+        "y": 480,
+        "wires": [
+            [
+                "bf691aacadf90493"
+            ]
+        ]
+    },
+    {
+        "id": "bf691aacadf90493",
+        "type": "function",
+        "z": "62a81c1bb16e67ec",
+        "g": "3533ebcbce4d9df9",
+        "name": "Payload User Registor",
+        "func": "var reply\nif (msg.payload.info==\"\") {\n    reply = { type: 'text', text: \"Device registered successfully\" };\n    msg.payload = {\n        // replyToken: receive_msg.events[0].replyToken, // Specify the recipient here\n        to: 'Ufd799b33dee148eaae2c9bfe7f22ce46',\n        messages: [reply]\n    }\n    msg.channelAccessToken = \"t7WT0sIN3WOyj2lwLKIqyjy8DHmwX5duoYsYmtpwOvDtosKf+1CwsMAoi+znZQcU7iU5SEXDCDh7CPQS53msq6rK7dZb/63UhkVH+XwFv9BCCm4BNvwUT50EBH0LtS+149XPTjOOPDWQsY0qRj7LzgdB04t89/1O/w1cDnyilFU=\"\n    msg.headers = {\n        \"Content-Type\": \"application/json\",\n        \"Authorization\": \"Bearer \" + msg.channelAccessToken\n    };\n\n\n}\n\nelse if (msg.error) {\n    reply = { type: 'text', text: \"Already register\" };\n\n    msg.payload = {\n        // replyToken: receive_msg.events[0].replyToken, // Specify the recipient here\n        to: 'Ufd799b33dee148eaae2c9bfe7f22ce46',\n        messages: [reply]\n    }\n    msg.channelAccessToken = \"t7WT0sIN3WOyj2lwLKIqyjy8DHmwX5duoYsYmtpwOvDtosKf+1CwsMAoi+znZQcU7iU5SEXDCDh7CPQS53msq6rK7dZb/63UhkVH+XwFv9BCCm4BNvwUT50EBH0LtS+149XPTjOOPDWQsY0qRj7LzgdB04t89/1O/w1cDnyilFU=\"\n    msg.headers = {\n        \"Content-Type\": \"application/json\",\n        \"Authorization\": \"Bearer \" + msg.channelAccessToken\n    };\n\n\n}\n\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 640,
+        "y": 500,
+        "wires": [
+            [
+                "b4b05439dd2fd783"
+            ]
+        ]
+    },
+    {
+        "id": "2e7cbcc4781c44e8",
+        "type": "catch",
+        "z": "62a81c1bb16e67ec",
+        "g": "3533ebcbce4d9df9",
+        "name": "Error",
+        "scope": [
+            "f1a7bae76fa6678f"
+        ],
+        "uncaught": false,
+        "x": 450,
+        "y": 540,
+        "wires": [
+            [
+                "bf691aacadf90493"
+            ]
+        ]
+    },
+    {
+        "id": "2b0bb398edaed551",
+        "type": "mysql",
+        "z": "62a81c1bb16e67ec",
+        "g": "0ec773523470908c",
+        "mydb": "de1da5a892df413f",
+        "name": "taistnode",
+        "x": 240,
+        "y": 640,
+        "wires": [
+            [
+                "88aa6c93c84de6ac"
+            ]
+        ]
+    },
+    {
+        "id": "01f25ff9b046c9ea",
+        "type": "link out",
+        "z": "62a81c1bb16e67ec",
+        "g": "89493719f78fb5ef",
+        "name": "#Registor",
+        "mode": "link",
+        "links": [
+            "45730dd777ab2d4b"
+        ],
+        "x": 755,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "45730dd777ab2d4b",
+        "type": "link in",
+        "z": "62a81c1bb16e67ec",
+        "g": "3533ebcbce4d9df9",
+        "name": "Registor Device",
+        "links": [
+            "01f25ff9b046c9ea"
+        ],
+        "x": 105,
+        "y": 420,
+        "wires": [
+            [
+                "aa8e5d24392ac221"
+            ]
+        ]
+    },
+    {
+        "id": "c1a62a9fdeb70434",
+        "type": "link out",
+        "z": "62a81c1bb16e67ec",
+        "g": "89493719f78fb5ef",
+        "name": "#Check Devices",
+        "mode": "link",
+        "links": [
+            "ad33a2d291a80563"
+        ],
+        "x": 755,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "ad33a2d291a80563",
+        "type": "link in",
+        "z": "62a81c1bb16e67ec",
+        "g": "0ec773523470908c",
+        "name": "Check Devices",
+        "links": [
+            "c1a62a9fdeb70434"
+        ],
+        "x": 115,
+        "y": 640,
+        "wires": [
+            [
+                "2b0bb398edaed551"
+            ]
+        ]
+    },
+    {
+        "id": "b55fee5e9fa02d3f",
+        "type": "link out",
+        "z": "62a81c1bb16e67ec",
+        "g": "89493719f78fb5ef",
+        "name": "initial",
+        "mode": "link",
+        "links": [
+            "fd7efa94c94ab0e5"
+        ],
+        "x": 755,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "fd7efa94c94ab0e5",
+        "type": "link in",
+        "z": "62a81c1bb16e67ec",
+        "g": "3dec8cf5a0369436",
+        "name": "Initial Line bot",
+        "links": [
+            "b55fee5e9fa02d3f"
+        ],
+        "x": 105,
+        "y": 320,
+        "wires": [
+            [
+                "47ef184687747571"
+            ]
+        ]
+    },
+    {
+        "id": "47ef184687747571",
+        "type": "function",
+        "z": "62a81c1bb16e67ec",
+        "g": "3dec8cf5a0369436",
+        "name": "Payload Initial",
+        "func": "var reply1=msg.payload.reply1\nvar reply2=msg.payload.reply2\n\n\nmsg.payload = {\n    to: 'Ufd799b33dee148eaae2c9bfe7f22ce46',\n    messages: [reply1, reply2]\n}\nmsg.channelAccessToken = \"t7WT0sIN3WOyj2lwLKIqyjy8DHmwX5duoYsYmtpwOvDtosKf+1CwsMAoi+znZQcU7iU5SEXDCDh7CPQS53msq6rK7dZb/63UhkVH+XwFv9BCCm4BNvwUT50EBH0LtS+149XPTjOOPDWQsY0qRj7LzgdB04t89/1O/w1cDnyilFU=\"\nmsg.headers = {\n    \"Content-Type\": \"application/json\",\n    \"Authorization\": \"Bearer \" + msg.channelAccessToken\n};\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 300,
+        "y": 320,
+        "wires": [
+            [
+                "386991878262aa7b"
+            ]
+        ]
+    },
+    {
+        "id": "9f43c677f379cd07",
+        "type": "function",
+        "z": "62a81c1bb16e67ec",
+        "g": "0ec773523470908c",
+        "name": "Data Format",
+        "func": "var Data = [];\nfor (var i = 0; i < msg.payload.length; i++) {\n\n    // if (msg.payload[i]) {\n    Data.push(\n        {\n            Dataset : {\n\n                'ID': i,\n                'device_addr': msg.payload[i].device_addr || \"\",\n                'topic': msg.payload[i].topic || \"\",\n                'value': msg.payload[i].value || \"\",\n                'status': msg.payload[i].status || \"\",\n                'create_time': msg.payload[i].create_time || \"\",\n                'update_time': msg.payload[i].update_time || \"\",\n                'Latitude': msg.payload[i].Latitude || \"\",\n                'Longtitude': msg.payload[i].Longtitude || \"\",\n            }\n        });\n    // }\n\n}\n\n\nreturn [Data];\n\n\n\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 470,
+        "y": 640,
+        "wires": [
+            [
+                "806fc8255f600a68"
+            ]
+        ]
+    },
+    {
+        "id": "806fc8255f600a68",
+        "type": "function",
+        "z": "62a81c1bb16e67ec",
+        "g": "0ec773523470908c",
+        "name": "Payload Device Registor",
+        "func": "\nvar reply1 = {\n    type: 'text',\n    text: \"📋 Information  \\n 💾 ID: \" + msg.Dataset.ID + \" \\n 🔎 device_addr: \" + msg.Dataset.device_addr + \" \\n 📡 topic:  \" + msg.Dataset.topic + \"\\n\" +\n        \" 📦 value: \" + msg.Dataset.value + \" \\n ✅ status: \" + msg.Dataset.status + \" \\n 🕐 create_time:  \" + msg.Dataset.create_time + \"\\n\" +\n        \" 🔔 update_time: \" + msg.Dataset.update_time + \" \\n 🏴󠁧󠁢󠁥󠁮󠁧󠁿 Lat,Long: \" + msg.Dataset.Latitude + \" , \" + msg.Dataset.Longtitude + \"\\n\" +\n        \" \\n 🙏 Thank you\"\n};\n\n\nmsg.payload = {\n    to: 'Ufd799b33dee148eaae2c9bfe7f22ce46',\n    messages: [reply1]\n}\nmsg.channelAccessToken = \"t7WT0sIN3WOyj2lwLKIqyjy8DHmwX5duoYsYmtpwOvDtosKf+1CwsMAoi+znZQcU7iU5SEXDCDh7CPQS53msq6rK7dZb/63UhkVH+XwFv9BCCm4BNvwUT50EBH0LtS+149XPTjOOPDWQsY0qRj7LzgdB04t89/1O/w1cDnyilFU=\"\nmsg.headers = {\n    \"Content-Type\": \"application/json\",\n    \"Authorization\": \"Bearer \" + msg.channelAccessToken\n};\n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 710,
+        "y": 640,
+        "wires": [
+            [
+                "1b0802aa7c1f2bf2"
+            ]
+        ]
+    },
+    {
+        "id": "cd51c2c6c87897a7",
+        "type": "link out",
+        "z": "62a81c1bb16e67ec",
+        "g": "89493719f78fb5ef",
+        "name": "#delete",
+        "mode": "link",
+        "links": [
+            "7f4742b5e4314bd9"
+        ],
+        "x": 755,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "7f4742b5e4314bd9",
+        "type": "link in",
+        "z": "62a81c1bb16e67ec",
+        "g": "06462ab2e4e2a0cf",
+        "name": "Delete Devices",
+        "links": [
+            "cd51c2c6c87897a7"
+        ],
+        "x": 115,
+        "y": 840,
+        "wires": [
+            [
+                "fa61af2f5a8edc74",
+                "da3541672a81c8c6"
+            ]
+        ]
+    },
+    {
+        "id": "fa61af2f5a8edc74",
+        "type": "function",
+        "z": "62a81c1bb16e67ec",
+        "g": "06462ab2e4e2a0cf",
+        "name": "Delete user db",
+        "func": "msg.topic=msg.topic1\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 280,
+        "y": 840,
+        "wires": [
+            [
+                "fec812cf67ad33a3"
+            ]
+        ]
+    },
+    {
+        "id": "da3541672a81c8c6",
+        "type": "function",
+        "z": "62a81c1bb16e67ec",
+        "g": "06462ab2e4e2a0cf",
+        "name": "Updated dev db",
+        "func": "msg.topic=msg.topic2\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 280,
+        "y": 900,
+        "wires": [
+            [
+                "fec812cf67ad33a3"
+            ]
+        ]
+    },
+    {
+        "id": "fec812cf67ad33a3",
+        "type": "mysql",
+        "z": "62a81c1bb16e67ec",
+        "g": "06462ab2e4e2a0cf",
+        "mydb": "de1da5a892df413f",
+        "name": "taistnode",
+        "x": 480,
+        "y": 860,
+        "wires": [
+            [
+                "cfc08b5fd8d8bb45"
+            ]
+        ]
+    },
+    {
+        "id": "88aa6c93c84de6ac",
+        "type": "switch",
+        "z": "62a81c1bb16e67ec",
+        "g": "0ec773523470908c",
+        "name": "",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "nempty"
+            },
+            {
+                "t": "empty"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 250,
+        "y": 700,
+        "wires": [
+            [
+                "9f43c677f379cd07"
+            ],
+            [
+                "842ccca0c4e1c791"
+            ]
+        ]
+    },
+    {
+        "id": "842ccca0c4e1c791",
+        "type": "function",
+        "z": "62a81c1bb16e67ec",
+        "g": "0ec773523470908c",
+        "name": "User not found",
+        "func": "\nvar reply1 = {\n    type: 'text',\n    text: \" ❗️ : Please check you Line User  ❗️\"\n};\n\n\nmsg.payload = {\n    to: 'Ufd799b33dee148eaae2c9bfe7f22ce46',\n    messages: [reply1]\n}\nmsg.channelAccessToken = \"t7WT0sIN3WOyj2lwLKIqyjy8DHmwX5duoYsYmtpwOvDtosKf+1CwsMAoi+znZQcU7iU5SEXDCDh7CPQS53msq6rK7dZb/63UhkVH+XwFv9BCCm4BNvwUT50EBH0LtS+149XPTjOOPDWQsY0qRj7LzgdB04t89/1O/w1cDnyilFU=\"\nmsg.headers = {\n    \"Content-Type\": \"application/json\",\n    \"Authorization\": \"Bearer \" + msg.channelAccessToken\n};\n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 460,
+        "y": 720,
+        "wires": [
+            [
+                "1b0802aa7c1f2bf2"
+            ]
+        ]
+    },
+    {
+        "id": "cfc08b5fd8d8bb45",
+        "type": "function",
+        "z": "62a81c1bb16e67ec",
+        "g": "06462ab2e4e2a0cf",
+        "name": "Payload Delete",
+        "func": "var reply\nif (msg.payload.info==\"\" && msg.payload.affectedRows == 1) {\n    reply = { type: 'text', text: \"Device Delete successfully\" };\n    msg.payload = {\n        // replyToken: receive_msg.events[0].replyToken, // Specify the recipient here\n        to: 'Ufd799b33dee148eaae2c9bfe7f22ce46',\n        messages: [reply]\n    }\n    msg.channelAccessToken = \"t7WT0sIN3WOyj2lwLKIqyjy8DHmwX5duoYsYmtpwOvDtosKf+1CwsMAoi+znZQcU7iU5SEXDCDh7CPQS53msq6rK7dZb/63UhkVH+XwFv9BCCm4BNvwUT50EBH0LtS+149XPTjOOPDWQsY0qRj7LzgdB04t89/1O/w1cDnyilFU=\"\n    msg.headers = {\n        \"Content-Type\": \"application/json\",\n        \"Authorization\": \"Bearer \" + msg.channelAccessToken\n    };\n\n\n}\n\nelse if (msg.payload.info == \"\" && msg.payload.affectedRows == 0) {\n    reply = { type: 'text', text: \"Device didn't Find\" };\n\n    msg.payload = {\n        // replyToken: receive_msg.events[0].replyToken, // Specify the recipient here\n        to: 'Ufd799b33dee148eaae2c9bfe7f22ce46',\n        messages: [reply]\n    }\n    msg.channelAccessToken = \"t7WT0sIN3WOyj2lwLKIqyjy8DHmwX5duoYsYmtpwOvDtosKf+1CwsMAoi+znZQcU7iU5SEXDCDh7CPQS53msq6rK7dZb/63UhkVH+XwFv9BCCm4BNvwUT50EBH0LtS+149XPTjOOPDWQsY0qRj7LzgdB04t89/1O/w1cDnyilFU=\"\n    msg.headers = {\n        \"Content-Type\": \"application/json\",\n        \"Authorization\": \"Bearer \" + msg.channelAccessToken\n    };\n\n\n}\n\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 700,
+        "y": 860,
+        "wires": [
+            [
+                "abeb3cb8eae72be8"
+            ]
+        ]
+    },
+    {
+        "id": "386991878262aa7b",
+        "type": "link out",
+        "z": "62a81c1bb16e67ec",
+        "g": "3dec8cf5a0369436",
+        "name": "Post Line Webhook",
+        "mode": "link",
+        "links": [
+            "becbb503c328d1fc"
+        ],
+        "x": 515,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "b4b05439dd2fd783",
+        "type": "link out",
+        "z": "62a81c1bb16e67ec",
+        "g": "3533ebcbce4d9df9",
+        "name": "Post Line Webhook",
+        "mode": "link",
+        "links": [
+            "becbb503c328d1fc"
+        ],
+        "x": 865,
+        "y": 500,
+        "wires": []
+    },
+    {
+        "id": "1b0802aa7c1f2bf2",
+        "type": "link out",
+        "z": "62a81c1bb16e67ec",
+        "g": "0ec773523470908c",
+        "name": "Post Line Webhook",
+        "mode": "link",
+        "links": [
+            "becbb503c328d1fc"
+        ],
+        "x": 875,
+        "y": 720,
+        "wires": []
+    },
+    {
+        "id": "abeb3cb8eae72be8",
+        "type": "link out",
+        "z": "62a81c1bb16e67ec",
+        "g": "06462ab2e4e2a0cf",
+        "name": "Post Line Webhook",
+        "mode": "link",
+        "links": [
+            "becbb503c328d1fc"
+        ],
+        "x": 865,
+        "y": 860,
+        "wires": []
+    },
+    {
+        "id": "becbb503c328d1fc",
+        "type": "link in",
+        "z": "62a81c1bb16e67ec",
+        "g": "28709120292710b3",
+        "name": "link in 1",
+        "links": [
+            "1b0802aa7c1f2bf2",
+            "386991878262aa7b",
+            "abeb3cb8eae72be8",
+            "b4b05439dd2fd783"
+        ],
+        "x": 865,
+        "y": 80,
+        "wires": [
+            [
+                "5c938d77e25e7b04"
+            ]
+        ]
+    },
+    {
+        "id": "de1da5a892df413f",
+        "type": "MySQLdatabase",
+        "name": "user_taist",
+        "host": "103.253.73.68",
+        "port": "3306",
+        "db": "taistdb",
+        "tz": "+07:00",
+        "charset": "UTF8"
+    }
+]
