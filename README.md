@@ -1,23 +1,25 @@
-## ICT720_Project_AIOT4 <img src="https://raw.githubusercontent.com/MartinHeinz/MartinHeinz/master/wave.gif" width="30px">
+## ICT720_Project_AIoT4 Smart refrigerator<img src="https://raw.githubusercontent.com/MartinHeinz/MartinHeinz/master/wave.gif" width="30px">
 
-### 🏢 Domain: Smart Production Line
+More in-depth details about the project can be read at:
+https://medium.com/@watthanai2540/taist2024-smart-refrigerator-lab-a1aee4804ed5
+
+### 🏢 Domain: Smart Home
 #### Stakeholder
-1. Supervisor
-2. Human Resources (HR)
+1. Refrigerator user
+2. Refrigerator services organization
 
 #### User stories
- 1. As a supervisor, I want to know when my subordinate not pay attention to work during working hours, so that I can admonish them.<br>
-     - acceptance criteria #1: I get notification when a worker using a phone on a production line during working hours.
-     - acceptance criteria #2: I get no notification when a worker not using a phone on a production line during working hours.
-     - acceptance criteria #3: I can activate/deactivate the notification as needed.
-     - acceptance criteria #4: I can stil able to see record of notification even I deactivate it at a certain time.
-     - acceptance criteria #5: I can know who is the worker that committing an inappropriate behavior.
-     - acceptance criteria #6: I can get a behavior weekly report of my subordinates.   
+ 1. As a user, I want to monitor information about my registered refrigerator(s).<br>
+     - acceptance criteria #1: I can register my refrigerator on the LINE application.
+     - acceptance criteria #2: I can know the number of goods in my smart refrigerator.
+     - acceptance criteria #3: I can monitor data and status on the dashboard of my registered device(s).
+     - acceptance criteria #4: I receive a notification every day or nearly every day about unavailable goods in my device(s)."
 
- 2. As a HR, I want to get information about inappropriate behaviors of wokers, so that I can evaluate the worker's productivity.<br>
-     - acceptance criteria #1: I can get a report when a worker makes a certain number of misbehavior.  
-     - acceptance criteria #2: I can access to the same report as same as a supervisor.
-     - acceptance criteria #3: I cab access to an image record of an inappropriate behavior of the worker.
+ 2. As a a refrigerator services organization, we want to know the total number of devices requiring service, along with the usage status of all devices in each area.<br>
+     - acceptance criteria #1: We are able to check the devices that are already registered.
+     - acceptance criteria #2: We have the capability to register new devices and remove old ones.
+     - acceptance criteria #3: We can view the status of the devices when they are registered by users.
+     - acceptance criteria #4: We can monitor all of the devices on dashboard
 
 ### Overview
 <p align="center">
@@ -48,3 +50,4 @@
 1. Wathanai Luealamai 6614552627 <br>
 2. Kiattisak Phetmeesri 6614552635 <br>
 3. Thanaphum Withiso 6614552597 <br>
+
