@@ -3,6 +3,30 @@
 More in-depth details about the project can be read at:
 https://medium.com/@watthanai2540/taist2024-smart-refrigerator-lab-a1aee4804ed5
 
+  <summary>Table of Contents</summary>
+  <ol>
+    <li>
+      <a href="#Domain:-Smart-Home">Domain: Smart Production Line</a>
+      <ul>
+        <li><a href="#Stakeholder">Stakeholder</a></li>
+        <li><a href="#User-stories">User stories</a></li>
+      </ul>
+    </li>
+    <li>
+      <a href="#overview">Getting Started</a>
+      <ul>
+        <li><a href="#overview">Overview</a></li>
+        <li><a href="#architecture">Architecture</a></li>
+        <li><a href="#Sequence-Diagram">Sequence Diagram</a></li>
+        <li><a href="#machine-diagram">Machine Diagram</a></li>
+        <li><a href="#device-operation">Device operation</a></li>
+      </ul>
+    </li>
+    <li><a href="#database-diagram">Database</a></li>
+    <li><a href="#training-model">Model Training</a></li>
+  </ol>
+
+
 ### 🏢 Domain: Smart Home
 #### Stakeholder
 1. Refrigerator user
