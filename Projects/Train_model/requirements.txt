@@ -1,0 +1,5 @@
+pyserial
+pyside6
+requests
+opencv-contrib-python
+numpy
