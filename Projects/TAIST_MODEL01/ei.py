@@ -15,6 +15,7 @@ from datetime import datetime
 class EspCamWidget(QtWidgets.QWidget):
     def __init__(self):
         super().__init__()
+        self.img = None 
         self.ser_ports = [port for (port, desc, hwid) in serial.tools.list_ports.comports()]
         self.populate_ui()
         self.timer = QtCore.QTimer(self)
@@ -55,7 +56,7 @@ class EspCamWidget(QtWidgets.QWidget):
         self.esp32_button.clicked.disconnect()
         self.esp32_button.clicked.connect(self.monitor_stream)
         self.esp32_button.repaint()
-        self.timer.start(1000)
+        self.timer.start(100)
 
     def monitor_stream(self):
         # while True:
@@ -76,27 +77,54 @@ class EspCamWidget(QtWidgets.QWidget):
     #     print(str(datetime.now() - Tstart))
     #     img = cv2.imdecode(np.frombuffer(buf, dtype=np.uint8), cv2.IMREAD_COLOR)
     #     self.update_image(img.copy())
+    # def grab_image(self):
+    #     # example code 
+    #     # https://github.com/openmv/openmv/blob/master/tools/rpc/README.md
+    #     Tstart = datetime.now()
+    #     print("Snapshot start...")
+    #     result = self.rpc_master.call("jpeg_image_snapshot", recv_timeout=1000)
+    #     print(result)
+    #     print(str(datetime.now() - Tstart)  + ': ' + str(result))
+    #     if result is not None:
+    #         jpg_sz = int.from_bytes(result.tobytes(), "little")
+    #         print("Image size: ", jpg_sz);
+    #         self.buf = bytearray(b'\x00'*jpg_sz)
+    #         Tstart = datetime.now()
+    #         print("Grab start...")
+    #         # result = self.rpc_master.call("jpeg_image_read", recv_timeout=1000)
+    #         self.rpc_master.get_bytes(self.buf, jpg_sz)
+    #         print(str(datetime.now() - Tstart))
+    #         #print(buf)
+    #         #img = cv2.imread("test.jpg")
+    #         self.img = cv2.imdecode(np.frombuffer(self.buf, dtype=np.uint8), cv2.IMREAD_COLOR)
+    #         self.update_image(self.img.copy())
+
+
     def grab_image(self):
-        # example code 
-        # https://github.com/openmv/openmv/blob/master/tools/rpc/README.md
         Tstart = datetime.now()
         print("Snapshot start...")
         result = self.rpc_master.call("jpeg_image_snapshot", recv_timeout=1000)
         print(result)
-        print(str(datetime.now() - Tstart)  + ': ' + str(result))
+        print(str(datetime.now() - Tstart) + ': ' + str(result))
         if result is not None:
             jpg_sz = int.from_bytes(result.tobytes(), "little")
-            print("Image size: ", jpg_sz);
-            self.buf = bytearray(b'\x00'*jpg_sz)
+            print("Image size: ", jpg_sz)
+            self.buf = bytearray(b'\x00' * jpg_sz)
             Tstart = datetime.now()
             print("Grab start...")
-            result = self.rpc_master.call("jpeg_image_read", recv_timeout=1000)
             self.rpc_master.get_bytes(self.buf, jpg_sz)
             print(str(datetime.now() - Tstart))
-            #print(buf)
-            #img = cv2.imread("test.jpg")
-            self.img = cv2.imdecode(np.frombuffer(self.buf, dtype=np.uint8), cv2.IMREAD_COLOR)
-            self.update_image(self.img.copy())
+            
+            # Decode the image using OpenCV
+            img = cv2.imdecode(np.frombuffer(self.buf, dtype=np.uint8), cv2.IMREAD_COLOR)
+            
+            if self.img is not None:
+                self.update_image(self.img.copy())
+            else:
+                print("Error: self.img is None")
+
+            # Update self.img after successful image capture
+            self.img = img.copy()
 
     # def update_image(self, img):
     #     img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)

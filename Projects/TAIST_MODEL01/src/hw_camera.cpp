@@ -1,89 +1,42 @@
 #include "hw_camera.h"
+#include <watthanai-project-1_inferencing.h>
+#include "edge-impulse-sdk/dsp/image/image.hpp"
 
+/* Constant defines -------------------------------------------------------- */
+#define EI_CAMERA_RAW_FRAME_BUFFER_COLS 320
+#define EI_CAMERA_RAW_FRAME_BUFFER_ROWS 240
+#define EI_CAMERA_FRAME_BYTE_SIZE 3
+uint8_t *snapshot_buf; // Global buffer for storing camera snapshots
 // constants
-#define TAG             "hw_camera"    
+#define TAG "hw_camera"
+static bool debug_nn = false;
+#define CAM_PWDN_PIN -1
+#define CAM_RESET_PIN 18
+#define CAM_XCLK_PIN 14
 
-#define CAM_PWDN_PIN     -1
-#define CAM_RESET_PIN    18
-#define CAM_XCLK_PIN     14
+#define CAM_SIOD_PIN 4
+#define CAM_SIOC_PIN 5
 
-#define CAM_SIOD_PIN     4
-#define CAM_SIOC_PIN     5
+#define CAM_Y9_PIN 15
+#define CAM_Y8_PIN 16
+#define CAM_Y7_PIN 17
+#define CAM_Y6_PIN 12
+#define CAM_Y5_PIN 10
+#define CAM_Y4_PIN 8
+#define CAM_Y3_PIN 9
+#define CAM_Y2_PIN 11
 
-#define CAM_Y9_PIN       15
-#define CAM_Y8_PIN       16
-#define CAM_Y7_PIN       17
-#define CAM_Y6_PIN       12
-#define CAM_Y5_PIN       10
-#define CAM_Y4_PIN       8
-#define CAM_Y3_PIN       9
-#define CAM_Y2_PIN       11
-
-#define CAM_VSYNC_PIN    6
-#define CAM_HREF_PIN     7
-#define CAM_PCLK_PIN     13
+#define CAM_VSYNC_PIN 6
+#define CAM_HREF_PIN 7
+#define CAM_PCLK_PIN 13
 
 // static variables
-// static bool is_initialised = false;
+
 // static function prototypes
 
 // initialize OV2640 modeule
-// void hw_camera_init(bool* success) {
-//     camera_config_t camera_config;
-
-//     // configure hw pins
-//     camera_config.ledc_channel = LEDC_CHANNEL_0;
-//     camera_config.ledc_timer = LEDC_TIMER_0;
-//     camera_config.pin_d0 = CAM_Y2_PIN;
-//     camera_config.pin_d1 = CAM_Y3_PIN;
-//     camera_config.pin_d2 = CAM_Y4_PIN;
-//     camera_config.pin_d3 = CAM_Y5_PIN;
-//     camera_config.pin_d4 = CAM_Y6_PIN;
-//     camera_config.pin_d5 = CAM_Y7_PIN;
-//     camera_config.pin_d6 = CAM_Y8_PIN;
-//     camera_config.pin_d7 = CAM_Y9_PIN;
-//     camera_config.pin_xclk = CAM_XCLK_PIN;
-//     camera_config.pin_pclk = CAM_PCLK_PIN;
-//     camera_config.pin_vsync = CAM_VSYNC_PIN;
-//     camera_config.pin_href = CAM_HREF_PIN;
-//     camera_config.pin_sscb_sda = CAM_SIOD_PIN;
-//     camera_config.pin_sscb_scl = CAM_SIOC_PIN;
-//     camera_config.pin_pwdn = CAM_PWDN_PIN;
-//     camera_config.pin_reset = CAM_RESET_PIN;
-//     camera_config.xclk_freq_hz = 20000000;
-//     camera_config.pixel_format = PIXFORMAT_JPEG;
-//     camera_config.grab_mode = CAMERA_GRAB_LATEST;
-//     camera_config.frame_size=FRAMESIZE_QVGA;
-//     camera_config.jpeg_quality =12;
-//     camera_config.fb_count = 1;
-//     camera_config.fb_location = CAMERA_FB_IN_PSRAM;
-//     camera_config.grab_mode= CAMERA_GRAB_WHEN_EMPTY;
-//     // configure jpeg settings
-//     if (psramFound()) {
-//         camera_config.frame_size = FRAMESIZE_240X240;
-//         camera_config.jpeg_quality = 10;
-//         camera_config.fb_count = 2;
-//         camera_config.fb_location = CAMERA_FB_IN_PSRAM;
-//         ESP_LOGI(TAG, "PSRAM found, using %d frames", camera_config.fb_count);
-//     } else {
-//         camera_config.frame_size = FRAMESIZE_240X240;
-//         camera_config.jpeg_quality = 12;
-//         camera_config.fb_count = 1;
-//         camera_config.fb_location = CAMERA_FB_IN_DRAM;
-//         ESP_LOGI(TAG, "PSRAM not found, using %d frames", camera_config.fb_count);
-//     }
-
-//     // initialize camera
-//     esp_camera_deinit();
-//     delay(100);
-//     esp_err_t err = esp_camera_init(&camera_config);
-//     if (err != ESP_OK) {
-//         Serial.printf("Camera init failed with error 0x%x", err);
-//         *success = false;
-//     } else{
-//       *success = true;
-//     }
-void hw_camera_init() {
+void hw_camera_init()
+{
     camera_config_t camera_config;
 
     // configure hw pins
@@ -110,13 +63,16 @@ void hw_camera_init() {
     camera_config.grab_mode = CAMERA_GRAB_LATEST;
 
     // configure jpeg settings
-    if (psramFound()) {
+    if (psramFound())
+    {
         camera_config.frame_size = FRAMESIZE_240X240;
         camera_config.jpeg_quality = 10;
         camera_config.fb_count = 2;
         camera_config.fb_location = CAMERA_FB_IN_PSRAM;
         ESP_LOGI(TAG, "PSRAM found, using %d frames", camera_config.fb_count);
-    } else {
+    }
+    else
+    {
         camera_config.frame_size = FRAMESIZE_240X240;
         camera_config.jpeg_quality = 12;
         camera_config.fb_count = 1;
@@ -128,58 +84,126 @@ void hw_camera_init() {
     esp_camera_deinit();
     delay(100);
     esp_err_t err = esp_camera_init(&camera_config);
-    if (err != ESP_OK) {
+    if (err != ESP_OK)
+    {
         ESP_LOGE(TAG, "Camera init failed with error 0x%x", err);
         return;
     }
+
     // adjust parameters
     sensor_t *cam_sensor = esp_camera_sensor_get();
     cam_sensor->set_framesize(cam_sensor, FRAMESIZE_240X240);
-    cam_sensor->set_brightness(cam_sensor, 1);     // -2 to 2
-    cam_sensor->set_contrast(cam_sensor, 0);       // -2 to 2
-    cam_sensor->set_saturation(cam_sensor, 0);     // -2 to 2
-    cam_sensor->set_special_effect(cam_sensor, 0); // 0 to 6 (0 - No Effect, 1 - Negative, 2 - Grayscale, 3 - Red Tint, 4 - Green Tint, 5 - Blue Tint, 6 - Sepia)
-    cam_sensor->set_whitebal(cam_sensor, 1);       // 0 = disable , 1 = enable
-    cam_sensor->set_awb_gain(cam_sensor, 1);       // 0 = disable , 1 = enable
-    cam_sensor->set_wb_mode(cam_sensor, 0);        // 0 to 4 - if awb_gain enabled (0 - Auto, 1 - Sunny, 2 - Cloudy, 3 - Office, 4 - Home)
-    cam_sensor->set_exposure_ctrl(cam_sensor, 1);  // 0 = disable , 1 = enable
-    cam_sensor->set_aec2(cam_sensor, 0);           // 0 = disable , 1 = enable
-    cam_sensor->set_ae_level(cam_sensor, 0);       // -2 to 2
-    cam_sensor->set_aec_value(cam_sensor, 300);    // 0 to 1200
-    cam_sensor->set_gain_ctrl(cam_sensor, 1);      // 0 = disable , 1 = enable
-    cam_sensor->set_agc_gain(cam_sensor, 0);       // 0 to 30
-    cam_sensor->set_gainceiling(cam_sensor, (gainceiling_t)0);  // 0 to 6
-    cam_sensor->set_bpc(cam_sensor, 0);            // 0 = disable , 1 = enable
-    cam_sensor->set_wpc(cam_sensor, 1);            // 0 = disable , 1 = enable
-    cam_sensor->set_raw_gma(cam_sensor, 1);        // 0 = disable , 1 = enable
-    cam_sensor->set_lenc(cam_sensor, 1);           // 0 = disable , 1 = enable
-    cam_sensor->set_hmirror(cam_sensor, 0);        // 0 = disable , 1 = enable
-    cam_sensor->set_vflip(cam_sensor, 1);          // 0 = disable , 1 = enable
-    cam_sensor->set_dcw(cam_sensor, 1);            // 0 = disable , 1 = enable
-    cam_sensor->set_colorbar(cam_sensor, 0);       // 0 = disable , 1 = enable
-    if (cam_sensor->id.PID == OV3660_PID) {
-      cam_sensor->set_vflip(cam_sensor, 1); // flip it back
-      cam_sensor->set_brightness(cam_sensor, 1); // up the brightness just a bit
-      cam_sensor->set_saturation(cam_sensor, 0); // lower the saturation
-    }
-
-
-
+    cam_sensor->set_brightness(cam_sensor, 1);                 // -2 to 2
+    cam_sensor->set_contrast(cam_sensor, 0);                   // -2 to 2
+    cam_sensor->set_saturation(cam_sensor, 0);                 // -2 to 2
+    cam_sensor->set_special_effect(cam_sensor, 0);             // 0 to 6 (0 - No Effect, 1 - Negative, 2 - Grayscale, 3 - Red Tint, 4 - Green Tint, 5 - Blue Tint, 6 - Sepia)
+    cam_sensor->set_whitebal(cam_sensor, 1);                   // 0 = disable , 1 = enable
+    cam_sensor->set_awb_gain(cam_sensor, 1);                   // 0 = disable , 1 = enable
+    cam_sensor->set_wb_mode(cam_sensor, 0);                    // 0 to 4 - if awb_gain enabled (0 - Auto, 1 - Sunny, 2 - Cloudy, 3 - Office, 4 - Home)
+    cam_sensor->set_exposure_ctrl(cam_sensor, 1);              // 0 = disable , 1 = enable
+    cam_sensor->set_aec2(cam_sensor, 0);                       // 0 = disable , 1 = enable
+    cam_sensor->set_ae_level(cam_sensor, 0);                   // -2 to 2
+    cam_sensor->set_aec_value(cam_sensor, 300);                // 0 to 1200
+    cam_sensor->set_gain_ctrl(cam_sensor, 1);                  // 0 = disable , 1 = enable
+    cam_sensor->set_agc_gain(cam_sensor, 0);                   // 0 to 30
+    cam_sensor->set_gainceiling(cam_sensor, (gainceiling_t)0); // 0 to 6
+    cam_sensor->set_bpc(cam_sensor, 0);                        // 0 = disable , 1 = enable
+    cam_sensor->set_wpc(cam_sensor, 1);                        // 0 = disable , 1 = enable
+    cam_sensor->set_raw_gma(cam_sensor, 1);                    // 0 = disable , 1 = enable
+    cam_sensor->set_lenc(cam_sensor, 1);                       // 0 = disable , 1 = enable
+    cam_sensor->set_hmirror(cam_sensor, 0);                    // 0 = disable , 1 = enable
+    cam_sensor->set_vflip(cam_sensor, 0);                      // 0 = disable , 1 = enable
+    cam_sensor->set_dcw(cam_sensor, 1);                        // 0 = disable , 1 = enable
+    cam_sensor->set_colorbar(cam_sensor, 0);                   // 0 = disable , 1 = enable
 }
 
 // camera snapshot in JPEG format
-uint32_t hw_camera_jpg_snapshot(uint8_t *buffer) {
+uint32_t hw_camera_jpg_snapshot(uint8_t *buffer)
+{
     camera_fb_t *fb = NULL;
     uint32_t fb_len;
     fb = esp_camera_fb_get();
-    if (fb) {
-        ESP_LOGI(TAG, "Camera capture success: %dx%d", fb->width, fb->height);
-    } else {
-        ESP_LOGE(TAG, "Camera capture failed");
+    if (fb)
+    {
+        // ESP_LOGI(TAG, "Camera capture success: %dx%d", fb->width, fb->height);
+        printf("Camera capture success: %dx%d\n", fb->width, fb->height);
+    }
+    else
+    {
+        // ESP_LOGE(TAG, "Camera capture failed");
+        printf("Camera capture failed\n");
     }
     memcpy(buffer, fb->buf, fb->len);
     fb_len = fb->len;
+    printf("Buffer contents:\n");
+    for (uint32_t i = 0; i < fb_len; i++)
+    {
+        printf("%02X ", buffer[i]); // Print each byte in hexadecimal format
+    }
+    printf("\n");
+
     esp_camera_fb_return(fb);
+    return fb_len;
+}
+
+// camera snapshot in JPEG, then convert to BMP
+uint32_t hw_camera_raw_snapshot(uint8_t *buffer)
+{
+    bool do_resize =false;
+    camera_fb_t *fb = NULL;
+    uint32_t fb_len;
+    fb = esp_camera_fb_get();
+    if (fb)
+    {
+        // ESP_LOGI(TAG, "Camera capture success: %dx%d", fb->width, fb->height);
+        printf("Camera capture success: %dx%d\n", fb->width, fb->height);
+    }
+    else
+    {
+        // ESP_LOGE(TAG, "Camera capture failed");
+        printf("Camera capture failed\n");
+    }
+    memcpy(buffer, fb->buf, fb->len);
+    fb_len = fb->len;
+    printf("Buffer contents:\n");
+    // for (uint32_t i = 0; i < fb_len; i++)
+    // {
+    //     printf("%02X ", buffer[i]); // Print each byte in hexadecimal format
+    // }
+    // printf("\n");
+    // bool converted = fmt2rgb888(fb->buf, fb->len, PIXFORMAT_JPEG, buffer);
+    // if (!converted) {
+    //     printf("Conversion failed\n");
+    //     return 0;  // Return 0 to indicate failure
+    // }
+
+    // if ((fb->width != EI_CAMERA_RAW_FRAME_BUFFER_COLS) || (fb->height != EI_CAMERA_RAW_FRAME_BUFFER_ROWS)) {
+    //     do_resize = true;
+    //     printf("Is resizee: %d\n",do_resize);
+    // }
+
+    // if (do_resize) {
+    //     ei::image::processing::crop_and_interpolate_rgb888(
+    //         buffer,
+    //         EI_CAMERA_RAW_FRAME_BUFFER_ROWS,
+    //         EI_CAMERA_RAW_FRAME_BUFFER_COLS,
+    //         buffer,
+    //         fb->width,
+    //         fb->height);
+
+    // }
+    bool converted = fmt2rgb888(fb->buf, fb->len, PIXFORMAT_JPEG, buffer);
+    printf("BMP conversion %d",converted);
+    // if (!converted) {
+    //     printf("BMP conversion failed");
+    //     fb->width = 0;
+    //     fb->height = 0;
+    // }
+    esp_camera_fb_return(fb);
+    // fb->width = 240;
+    // fb->height = 240;
+
+    // esp_camera_fb_return(fb);
     return fb_len;
 }
 
@@ -188,25 +212,58 @@ uint32_t hw_camera_jpg_snapshot(uint8_t *buffer) {
 
 
 
+uint32_t ei_camera_get_data(size_t offset, size_t length, float *out_ptr)
+{
+    // we already have a RGB888 buffer, so recalculate offset into pixel index
+    size_t pixel_ix = offset * 3;
+    size_t pixels_left = length;
+    size_t out_ptr_ix = 0;
+
+    while (pixels_left != 0)
+    {
+        out_ptr[out_ptr_ix] = (snapshot_buf[pixel_ix] << 16) + (snapshot_buf[pixel_ix + 1] << 8) + snapshot_buf[pixel_ix + 2];
+
+        // go to the next pixel
+        out_ptr_ix++;
+        pixel_ix += 3;
+        pixels_left--;
+    }
+    return out_ptr_ix;
+    ei::signal_t signal;
+    signal.total_length = EI_CLASSIFIER_INPUT_WIDTH * EI_CLASSIFIER_INPUT_HEIGHT;
+    signal.get_data = ei_camera_get_data;
+    ei_impulse_result_t result = {0};
+    EI_IMPULSE_ERROR err = run_classifier(&signal, &result, debug_nn);
+    // if (err != EI_IMPULSE_OK)
+    // {
+    //     ei_printf("ERR: Failed to run classifier (%d)\n", err);
+    // }
+}
 
 
-// // camera snapshot in JPEG, then convert to BMP
-// void hw_camera_raw_snapshot(uint8_t *buffer, uint32_t *width, uint32_t *height) {
-//     camera_fb_t *fb = NULL;
-//     uint32_t fb_len;
-//     fb = esp_camera_fb_get();
-//     if (fb) {
-//         ESP_LOGI(TAG, "Camera capture success: %dx%d", fb->width, fb->height);
-//     } else {
-//         ESP_LOGE(TAG, "Camera capture failed");
-//     }
-//     bool converted = fmt2rgb888(fb->buf, fb->len, PIXFORMAT_JPEG, buffer);
-//     if (!converted) {
-//         ESP_LOGE(TAG, "BMP conversion failed");
-//         *width = 0;
-//         *height = 0;
-//     }
-//     esp_camera_fb_return(fb);
-//     *width = 240;
-//     *height = 240;
-// }
+
+
+// camera snapshot in JPEG, then convert to BMP
+// camera snapshot in JPEG, then convert to BMP
+uint32_t hw_camera_raw_snapshot02(uint8_t *buffer,uint8_t *rgb_buf ,uint32_t *width, uint32_t *height) {
+    camera_fb_t *fb = NULL;
+    uint32_t fb_len;
+    fb = esp_camera_fb_get();
+    if (fb) {
+        ESP_LOGI(TAG, "Camera capture success: %dx%d", fb->width, fb->height);
+    } else {
+        ESP_LOGE(TAG, "Camera capture failed");
+    }
+    bool converted = fmt2rgb888(fb->buf, fb->len, PIXFORMAT_JPEG, rgb_buf);
+    if (!converted) {
+        ESP_LOGE(TAG, "BMP conversion failed");
+        *width = 0;
+        *height = 0;
+    }
+    memcpy(buffer, fb->buf, fb->len);
+    fb_len = fb->len;
+    esp_camera_fb_return(fb);
+    *width = 240;
+    *height = 240;
+    return fb_len;
+}
