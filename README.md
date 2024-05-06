@@ -422,7 +422,10 @@ taist_bot_app:
 
 <div align="center">
      <img src="image/Data_pipline/Linebot/Lineapi01.png" width="250" height="150">
-      <img src="image/Data_pipline/Linebot/Lineapi02.png" width="250" height="250">
+</div>
+
+<div align="center">
+     <img src="image/Data_pipline/Linebot/lineapi02.png" width="250" height="250">
 </div>
 
 ---------------------------
@@ -438,7 +441,7 @@ taist_bot_app:
      <img src="image/Data_pipline/Linebot/linebot_node-red.PNG" width="350" height="250">
 </div>
 
-<p align="right">(<a href="#top">back to top</a>)</p>
+
 
    ```sh 
 var reply1=msg.payload.reply1
@@ -457,6 +460,8 @@ msg.headers = {
 return msg;
 
   ```
+
+  <p align="right">(<a href="#top">back to top</a>)</p>
 
 
 
