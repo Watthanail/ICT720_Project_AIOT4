@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  taist_dev_app:
+    build: .
+    container_name: taist_dev_app
+    image: taist_dev_app_image
+    ports:
+      - "8005:8005"
+    volumes:
+      - .:/code
+    networks:
+      - nginx_net
+      - mongodb_net  # Add the mongodb_net network here
+      - mysql_net
+
+networks:
+  nginx_net:
+    external: true
+
+  mongodb_net:
+    external: true
+    
+  mysql_net:
+    external: true  # Assuming mongodb_net is an external network

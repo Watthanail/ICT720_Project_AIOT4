@@ -1,0 +1,6 @@
+fastapi
+uvicorn
+line-bot-sdk
+requests
+jinja2
+python-dotenv

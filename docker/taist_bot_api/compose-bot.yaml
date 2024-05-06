@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  taist_bot_app:
+    build: .
+    container_name: taist_bot_app
+    image: taist_bot_app_image
+    env_file:
+      - .env
+    ports:
+      - ${LINE_WEBHOOK_PORT}:${LINE_WEBHOOK_PORT}
+    volumes:
+      - .:/code
+    networks:
+      - nginx_net
+
+networks:
+  nginx_net:
+    external: true
+
