@@ -155,14 +155,23 @@ https://medium.com/@watthanai2540/taist2024-smart-refrigerator-lab-a1aee4804ed5
 <p align= "left">1 Collecting images</p>
 <p align= "left">2 Labeling images</p>
 <p align= "left">3 Training the model.</p>
+
+
+
 --------------------------------
 
 #### Testing ML Library
 <p align= "left">The model is verified by deploying it on the board and attempting to detect labeled objects. The information is then sent to a program to display the labeled results.</p>
+<div align="center">
+     <img src="image/Node-Device/Sofeware_design/Testing_ML/Testing_model01.png" width="150" height="150">
+      <img src="image/Node-Device/Sofeware_design/Testing_ML/Testing_model02.png" width="150" height="150">
+</div>
+
 --------------------------------
 
 #### Final Deployment
 <p align= "left"> For final deployment, the FreeRTOS system (a real-time operating system) is utilized to manage multiple tasks of the microcontroller. This includes utilizing the resources of the ESP32 CPU to achieve maximum benefits. The concepts employed involve creating three tasks, with the trigger work assigned to core 1, and the communication task and object detection task handled in core 2. </p>
+
 --------------------------------
 
 <p align="right">(<a href="#top">back to top</a>)</p>
