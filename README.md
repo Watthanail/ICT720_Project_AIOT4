@@ -39,12 +39,14 @@ https://medium.com/@watthanai2540/taist2024-smart-refrigerator-lab-a1aee4804ed5
         </ul>
     </li>
     <li>
-      <a href="#Workstation-Docker-container">Workstation Docker container</a>
+      <a href="#Workstation-on-Docker">Workstation on Docker</a>
       <ul>
         <li><a href="#MQTT-broker">MQTT broker</a></li>
-        <li><a href="#Data-pipeline">Data pipeline</a></li>
-        <li><a href="#Database">Database</a></li>
-        <li><a href="#Dashboard">Dashboard</a></li>
+        <li><a href="#MySQL">MySQL</a></li>
+        <li><a href="#Node-Red">Node-Red</a></li>
+        <li><a href="#Grafana">Grafana</a></li>
+        <li><a href="#Taist-dev-api">Taist dev api</a></li>
+        <li><a href="#Taist-bot-api">Taist bot api</a></li>
       </ul>
     </li>
     <li>
@@ -55,10 +57,7 @@ https://medium.com/@watthanai2540/taist2024-smart-refrigerator-lab-a1aee4804ed5
       </ul>
     </li>
     <li>
-      <a href="#Fastapi-&-index.html">Fastapi & index.html</a>
-    </li>
-    <li>
-      <a href="#Config-Dashboard">Config Dashboard</a>
+      <a href="#Dashboard">Dashboard</a>
     </li>
    
   </ol>
@@ -193,19 +192,26 @@ docker compose -f {{filename}}.yaml up — build -d</p>
 version: "3.7"
 services:
   emqx:
-    image: emqx/emqx
-    container_name: emqx
-    ports:
-    - "18083:18083" # dashboard
-    - "1883:1883" # mqtt
-    - "8883:8883" # mqtts
-    - "8081:8081" # dashboard api
-    - "8083:8083" # ws
-    - "8084:8084" # wss
-    volumes:
-    - /TAIST2024/emqx/data:/opt/emqx/data/mnesia
-    environment:
-    - TZ=Asia/Bangkok
+  image: emqx/emqx
+  container_name: emqx
+  ports:
+  - "18083:18083" # dashboard
+  - "1883:1883" # mqtt
+  - "8883:8883" # mqtts
+  - "8081:8081" # dashboard api
+  - "8083:8083" # ws
+  - "8084:8084" # wss
+  volumes:
+  - /TAIST2024/emqx/data:/opt/emqx/data/mnesia
+  environment:
+  - TZ=Asia/Bangkok
+  networks:      
+              - mysql_net
+
+networks:  
+      mysql_net:    
+          external: true
+
   ```
   <div align="center">
      <img src="image/Workstation_Docker/emqx01.PNG" width="200" height="200">
@@ -214,90 +220,93 @@ services:
 
 -------------------
 
-### Data pipeline
-   ```sh 
-version: "3.7"
-services:
-  node-red:
-    image: nodered/node-red
-    ports:
-    - 1880:1880
-    volumes:
-    - /TAIST2024/node-red/data:/data
-    environment:
-    - TZ=Asia/Bangkok
-  ```
-
-<div align="center">
-     <img src="image/Workstation_Docker/node-red01.PNG" width="450" height="250">
-</div>
-
-------------------
-
-### Databases
-
+### MySQL
    ```sh 
 version: "3.7"
 services:
   mysql:
-    image: mysql:8
-    container_name: mysql
-    ports:
-    - 3306:3306
-    volumes:
-    - /TAIST2024/mysql/data:/var/lib/mysql
-    - /TAIST2024/mysql/etc:/etc/mysql/conf.d
-    environment:
-    - TZ=Asia/Bangkok
-    - MYSQL_ROOT_PASSWORD=xxxxxxxxx
+  image: mysql:8
+  container_name: mysql
+  ports:
+  - 3306:3306
+  volumes:
+  - /TAIST2024/mysql/data:/var/lib/mysql
+  - /TAIST2024/mysql/etc:/etc/mysql/conf.d
+  environment:
+  - TZ=Asia/Bangkok
+  - MYSQL_ROOT_PASSWORD=xxxxxxxxx
+  networks:      
+              - mysql_net
+
+networks:  
+      mysql_net:    
+          external: true
+
   ```
 
-  
 <div align="center">
      <img src="image/Workstation_Docker/mysql01.PNG" width="450" height="250">
 </div>
 
------------
+------------------
 
-### Dashboard
+### Node-Red
 
    ```sh 
 version: "3.7"
 services:
-  grafana:
-    image: grafana/grafana
-    container_name : grafana
-    ports:
-    - 3000:3000
-    volumes:
-    - /TAIST2024/grafana/data:/var/lib/grafana
-    - /TAIST2024/grafana/plugins:/var/lib/grafana/plugins
-    environment:
-    - TZ=Asia/Bangkok
+    node-red:
+         image: nodered/node-red
+         ports:
+            - 1880:1880
+         volumes:
+            - /TAIST2024/node-red/data:/data
+         environment:
+            - TZ=Asia/Bangkok
+
+  ```
+
+  
+<div align="center">
+     <img src="image/Workstation_Docker/node-red01.PNG" width="450" height="250">
+</div>
+
+-----------
+
+### Grafana
+
+   ```sh 
+version: "3.7"
+services:
+   grafana:
+       image: grafana/grafana
+       container_name : grafana
+       ports:
+            - 3000:3000
+      volumes:
+            - /TAIST2024/grafana/data:/var/lib/grafana
+            - /TAIST2024/grafana/plugins:/var/lib/grafana/plugins
+      environment:
+            - TZ=Asia/Bangkok
+       networks:      
+             - mysql_net
+
+networks:  
+      mysql_net:    
+          external: true
+
   ```
 
 <div align="center">
      <img src="image/Workstation_Docker/grafana01.PNG" width="450" height="250">
 </div>
 
-<p align="right">(<a href="#top">back to top</a>)</p>
 
-## Data pipeline on Node-Red
+-----------
 
-### Calculate Data
-<div align="center">
-     <img src="image/Data_pipline/Calculate_Data/node-red_FlowCal01.PNG" width="450" height="250">
-</div>
-
-------------------
-
-### Line bot application
-
-<p align="right">(<a href="#top">back to top</a>)</p>
+## Taist dev api
 
 
-
-## Fastapi-&-index.html
 <p align= "left">xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</p>
 <div align="center">
      <img src="image/fastapi_index/Fastapi01.PNG" width="350" height="350">
@@ -351,14 +360,32 @@ def get_devices():
 
   ```
 
-   -----------------------------------
+-----------
 
+## Taist bot api
  <p align= "left">QR coede.html </p>
  
 <div align="center">
      <img src="image/fastapi_index/index_Qrcode.png" width="200" height="300">
 </div>
 
+  ```sh 
+version: '3.8‘
+services:  
+taist_bot_app:    
+  build: .    
+  container_name: taist_bot_app    
+  image: taist_bot_app_image    
+  env_file:    .env    
+  ports:     
+  - ${LINE_WEBHOOK_PORT}:${LINE_WEBHOOK_PORT}    
+  volumes:     
+  - .:/code
+  ```
+
+  -----------------------------------
+
+ <p align= "left">method @Delete xxxxxxxxxxxxxxxxxxxxx </p>
 
    ```sh 
 
@@ -368,6 +395,61 @@ def get_devices():
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
-## Config Dashboard
+## Data pipeline on Node-Red
+
+<div align="center">
+     <img src="image/Data_pipline/Calculate_Data/node-red_FlowCal01.PNG" width="450" height="250">
+</div>
+
+
+### Calculate Data
+
+
+------------------
+
+### Line bot application
+
+<div align="center">
+     <img src="image/Data_pipline/Linebot/Lineapi01.png" width="250" height="150">
+      <img src="image/Data_pipline/Linebot/Lineapi02.png" width="250" height="250">
+</div>
+
+---------------------------
+
+<div align="center">
+     <img src="image/Data_pipline/Linebot/Linelogin01.PNG" width="100" height="150">
+      <img src="image/Data_pipline/Linebot/Linelogin02.PNG" width="100" height="150">
+      <img src="image/Data_pipline/Linebot/Linelogin03.PNG" width="100" height="150">
+</div>
+
+--------
+<div align="center">
+     <img src="image/Data_pipline/Linebot/linebot_node-red.PNG" width="350" height="250">
+</div>
+
+<p align="right">(<a href="#top">back to top</a>)</p>
+
+   ```sh 
+var reply1=msg.payload.reply1
+var reply2=msg.payload.reply2
+
+msg.payload = {
+    to: 'Ufd799b33dee14xxxxxxxxxx',
+    messages: [reply1, reply2]
+}
+msg.channelAccessToken = "t7WT0sIN3WOyj2lwLKIqyjy8DHxxxxxxxx"
+msg.headers = {
+    "Content-Type": "application/json",
+    "Authorization": "Bearer " + msg.channelAccessToken
+};
+
+return msg;
+
+  ```
+
+
+
+
+## Dashboard
 
 <p align="right">(<a href="#top">back to top</a>)</p>
