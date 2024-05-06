@@ -406,6 +406,8 @@ taist_bot_app:
 
 ### Line bot application
 
+<p align= "left"> When an event, such as filling in text, occurs, the line system will send information in the form of an HTTP POST request to the webhook URL that we’ve connected. We’ll refer to the message coming from Line as a webhook event, and we’ll process it before replying and continuing with the chatbot interaction. </p>
+
 <div align="center">
      <img src="image/Data_pipline/Linebot/Lineapi01.png" width="250" height="150">
       <img src="image/Data_pipline/Linebot/Lineapi02.png" width="250" height="250">
@@ -448,5 +450,10 @@ return msg;
 
 
 ## Dashboard
+
+<p align= "left"> Grafana is a multi-platform open source analytics and interactive visualization web application. It can produce charts, graphs, and alerts for the web when connected to supported data sources. </p>
+<div align="center">
+     <img src="image/Grafana03.png" width="450" height="250">
+</div>
 
 <p align="right">(<a href="#top">back to top</a>)</p>
