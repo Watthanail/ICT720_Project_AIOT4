@@ -132,7 +132,7 @@ void setup()
       "cam_detect_task", // name of task
       8192,              // stack size of task
       nullptr,           // parameter of the task
-      1,                 // priority of the task
+      2,                 // priority of the task
       &camTaskHandle,    // task handle to keep track of created task
       1                  // core to run the task on (0 or 1)
   );
@@ -142,7 +142,7 @@ void setup()
       "comm_task", // name of task
       4096,        // stack size of task
       nullptr,     // parameter of the task
-      2,           // priority of the task
+      1,           // priority of the task
       nullptr,     // task handle to keep track of created task
       1            // core to run the task on (0 or 1)
   );
