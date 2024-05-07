@@ -195,7 +195,7 @@ docker compose -f {{filename}}.yaml up — build -d</p>
 -----------------------------------
 
 ### MQTT broker
-
+<p align= "left">EMQ X is a feature-rich and reliable MQTT broker that can meet the needs of various IoT and messaging applications, offering scalability, performance, reliability, flexibility, security, and comprehensive management capabilities. </p>
 
    ```sh 
 version: "3.7"
@@ -230,6 +230,8 @@ networks:
 -------------------
 
 ### MySQL
+<p align= "left">MySQL is a versatile database system that can be used in a wide range of applications and industries to store, manage, and analyze structured data efficiently.</p>
+ 
    ```sh 
 version: "3.7"
 services:
@@ -260,6 +262,7 @@ networks:
 ------------------
 
 ### Node-Red
+<p align= "left">Node-RED is an open-source flow-based programming tool designed for visual programming of event-driven applications. It provides a browser-based flow editor that allows users to wire together devices, APIs, and online services to create applications. </p>
 
    ```sh 
 version: "3.7"
@@ -283,6 +286,7 @@ services:
 -----------
 
 ### Grafana
+<p align= "left">Grafana is a versatile tool that enables users to gain insights from their data through interactive dashboards, alerts, and visualizations </p>
 
    ```sh 
 version: "3.7"
@@ -313,15 +317,48 @@ networks:
 
 -----------
 
-## Taist dev api
+### Taist dev api
+<p align= "left">We can use FastAPI to create API endpoints for performing CRUD (Create, Read, Update, Delete) operations on a database </p>
+
+<div>
+      <ul>
+        <li>POST Request (Create): Add data to the database.</li>
+        <li>GET Request (Read): Retrieve data from the database.</li>
+        <li>PUT Request (Update): Update data in the database.</li>
+        <li>DELETE Request (Delete): Remove data from the database.</li>
+      </ul>
+</div>
 
 
-<p align= "left">xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</p>
 <div align="center">
      <img src="image/fastapi_index/Fastapi01.PNG" width="350" height="350">
 </div>
 
- <p align= "left">method @get xxxxxxxxxxxxxxxxxxxxx </p>
+ -----------------------------------
+ <p align= "left">POST Request (Create): Add data to the database.</p>
+
+  ```sh 
+  @app.post('/register_device')
+  async def register_device(register: Registor):
+    # Insert data into MySQL
+    sql = "INSERT INTO dev_registor_db (device_name, device_addr, branch_name, Latitude, Longtitude) VALUES (%s, %s, %s, %s, %s)"
+    values = (
+        register.device_name,
+        register.device_addr,
+        register.branch_name,
+        register.Latitude,
+        register.Longtitude
+    )
+    mycursor.execute(sql, values)
+    mydb.commit()
+
+    return {"message": "Device registered successfully"}
+
+  ```
+
+  -----------------------------------
+
+<p align= "left">GET Request (Read): Retrieve data from the database.</p>
 
    ```sh 
 @app.get("/devices", response_model=List[DeviceRegistration])
@@ -351,31 +388,40 @@ def get_devices():
 
  -----------------------------------
 
- <p align= "left">method @post xxxxxxxxxxxxxxxxxxxxx </p>
 
-  ```sh 
 
-  xxxxx
-
-  ```
-
-  -----------------------------------
-
- <p align= "left">method @Delete xxxxxxxxxxxxxxxxxxxxx </p>
+ <p align= "left">DELETE Request (Delete): Remove data from the database. </p>
 
    ```sh 
 
-  xxxxx
+  @app.delete('/delete/{device_addr}')
+  async def delete_device(device_addr: str):
+    # Delete data from MySQL
+    delete_device_query = "DELETE FROM dev_registor_db WHERE device_addr = %s"
+    mycursor.execute(delete_device_query, (device_addr,))
+    mydb.commit()
+    # Check if the device was found and deleted
+    if mycursor.rowcount == 0:
+        raise HTTPException(status_code=404, detail="Device not found")
+
+
+    delete_query = "DELETE FROM user_registor_db WHERE device_addr = %s"
+    mycursor.execute(delete_query, (device_addr,))
+    mydb.commit()
+
+    return {"message": "Device deleted successfully"}
 
   ```
 
 -----------
 
 ## Taist bot api
- <p align= "left">QR coede.html </p>
+ <p align= "left">User can register their own device by using LINE application to scan the QR-code</p>
  
 <div align="center">
      <img src="image/fastapi_index/index_Qrcode.png" width="200" height="300">
+     <img src="image/fastapi_index/scan_qrcode.jpg" width="200" height="300">
+     <img src="image/fastapi_index/device_egistered.jpg" width="200" height="300">
 </div>
 
   ```sh 
@@ -394,11 +440,32 @@ taist_bot_app:
 
   -----------------------------------
 
- <p align= "left">method @Delete xxxxxxxxxxxxxxxxxxxxx </p>
+ <p align= "left">GET Request </p>
 
    ```sh 
 
-  xxxxx
+  # Logging configuration
+  logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+
+  # Linebot configuration
+  channel_secret = os.getenv('LINE_CHANNEL_SECRET')
+  liff_id = os.getenv('LIFF_ID')
+  channel_access_token = os.getenv('LINE_ACCESS_TOKEN')
+  if None in (channel_secret, liff_id, channel_access_token):
+      print('Specify LINE_CHANNEL_SECRET, LIFF_ID, and LINE_ACCESS_TOKEN as environment variables.')
+      sys.exit(1)
+  configuration = Configuration(access_token=channel_access_token)
+
+  # Start FastAPI instance
+  app = FastAPI()
+  app.mount("/static", StaticFiles(directory="static"), name="static")
+  templates = Jinja2Templates(directory="templates")
+  handler = WebhookHandler(channel_secret)
+
+
+  @app.get('/')
+  async def liff_ui(request: Request):
+      return templates.TemplateResponse(request=request, name="index.html", context={"LIFF_ID": liff_id})
 
   ```
 
@@ -412,7 +479,7 @@ taist_bot_app:
 
 
 ### Calculate Data
-
+<p align= "left">The MQTT node in Node-RED subscribes to the same topic as the node device. The node device sends the payload for a short period of time. Afterward, we collect only 5 values, perform sorting, and find the median value from the sorted array. Then, we send the median value to (INSERT to device_db) and (UPDATE the value in user_register_db). </p>
 
 ------------------
 
