@@ -420,8 +420,8 @@ def get_devices():
  
 <div align="center">
      <img src="image/fastapi_index/index_Qrcode.png" width="200" height="300">
-     <img src="image/fastapi_index/scan_qrcode.jpg" width="200" height="300">
-     <img src="image/fastapi_index/device_egistered.jpg" width="200" height="300">
+     <img src="image/fastapi_index/scan_qrcode.png" width="200" height="300">
+     <img src="image/fastapi_index/device_egistered.png" width="200" height="300">
 </div>
 
   ```sh 
